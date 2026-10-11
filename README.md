@@ -13,8 +13,8 @@ The skill reads that file first. Its rules win over the skill.
 ## Install
 
 Use the agent's marketplace where it has one. The scripts in `docs/` are
-the fallback. Each one copies the skill folder into the agent's skills
-directory and nothing else. GitHub Pages serves them from
+the fallback for an agent without a marketplace, or for a machine without
+the agent's CLI. GitHub Pages serves them from
 <https://mr3zee.github.io/code-doc-writer/>. Each script installs for the
 current user. Add `-s -- --project` after `sh` to install into the current
 project instead.
@@ -32,57 +32,38 @@ Or:
 curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh
 ```
 
-The script copies `skills/code-doc-writer` into `~/.claude/skills/`, or
-into `.claude/skills/` with `--project`.
-
 ### Codex
-
-This repository is a Codex plugin and a one-plugin marketplace:
 
 ```
 codex plugin marketplace add Mr3zee/code-doc-writer
 codex plugin add code-doc-writer@code-doc-writer
 ```
 
-Fallback:
+Or:
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh
 ```
 
-The script copies the skill folder into `~/.agents/skills/`, or into
-`.agents/skills/` with `--project`.
-
 ### pi
 
-Install the repository as a pi package. Add `-l` for the current project
-only:
+Add `-l` for the current project only:
 
 ```
 pi install git:github.com/Mr3zee/code-doc-writer
 ```
 
-Fallback:
+Or:
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh
 ```
 
-The script copies the skill folder into `~/.agents/skills/`, or into
-`.agents/skills/` with `--project`. The skill appears as
-`/skill:code-doc-writer`.
-
 ### Junie
-
-Junie has no marketplace yet. Use the script:
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh
 ```
-
-It copies the skill folder into `~/.junie/skills/`, or into
-`.junie/skills/` with `--project`. Junie also reads `.agents/skills/` and
-`~/.agents/skills/`. Check the skill with `/skills` in Junie.
 
 ## Publish
 
