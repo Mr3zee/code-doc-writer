@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "code-doc-writer",
+  "version": "0.1.0",
+  "description": "Write and rewrite code comments and user-facing messages in short plain technical English."
+}

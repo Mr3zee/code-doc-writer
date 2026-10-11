@@ -45,16 +45,21 @@ Without the marketplace, copy `skills/code-doc-writer` into
 
 ### Codex
 
-Codex reads `.agents/skills/` in the project and `~/.agents/skills/` for
-the user. Copy or symlink the skill folder there:
+This repository is a Codex plugin and a one-plugin marketplace
+(`.agents/plugins/marketplace.json`). Add it and install the plugin:
+
+```
+codex plugin marketplace add Mr3zee/code-doc-writer
+codex plugin add code-doc-writer@code-doc-writer
+```
+
+Without the marketplace, copy the skill folder into `.agents/skills/` of
+a project or into `~/.agents/skills/`:
 
 ```
 git clone https://github.com/Mr3zee/code-doc-writer
 cp -r code-doc-writer/skills/code-doc-writer ~/.agents/skills/
 ```
-
-Codex detects the skill on the next start. Inside a session,
-`$skill-installer` can also install a skill from a GitHub repository.
 
 ### pi
 
@@ -71,15 +76,21 @@ as `/skill:code-doc-writer`. pi also reads `.agents/skills/` and
 
 ### Junie
 
-Junie reads `.junie/skills/` in the project and `~/.junie/skills/` for the
-user, and also `.agents/skills/` and `~/.agents/skills/`. Copy the skill
-folder there:
+Run the install script from the project page. User scope:
 
 ```
-cp -r code-doc-writer/skills/code-doc-writer ~/.junie/skills/
+curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh
 ```
 
-Check it with `/skills` in Junie.
+Project scope, from the project root:
+
+```
+curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project
+```
+
+The script copies the skill folder into `~/.junie/skills/` or
+`.junie/skills/`. Junie also reads `.agents/skills/` and
+`~/.agents/skills/`. Check the skill with `/skills` in Junie.
 
 ## Publish
 
@@ -97,10 +108,11 @@ on the Claude Code plugins documentation site.
 
 ### Codex
 
-Codex has no central marketplace. Distribute the skill as this repository
-and point users to the Codex install steps above. To ship it with MCP
-servers or more skills, package it as a Codex plugin, as the Codex skills
-documentation describes.
+The marketplace file is `.agents/plugins/marketplace.json`, and the plugin
+manifest is `plugin.json` at the root, with `.codex-plugin/plugin.json` as
+the fallback for older Codex versions. Codex discovers the skill from
+`skills/`. Push the repository and tell users to run
+`codex plugin marketplace add Mr3zee/code-doc-writer`.
 
 ### pi
 
@@ -110,13 +122,13 @@ gallery, and users run `pi install npm:code-doc-writer`.
 
 ### Junie
 
-Junie has no marketplace yet. JetBrains has a skills repository on GitHub
-that users copy from. Until Junie supports a shared repository, point
-users to the Junie install steps above.
+Junie has no marketplace yet. The install script lives in `docs/`, which
+GitHub Pages serves at `https://mr3zee.github.io/code-doc-writer/`. A push
+to `master` updates the page.
 
 ## Sources
 
 - Claude Code: <https://code.claude.com/docs/en/plugins/create-marketplace>
-- Codex: <https://developers.openai.com/codex/skills>
+- Codex: <https://developers.openai.com/codex/plugins/build>
 - pi: <https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/packages.md>
 - Junie: <https://junie.jetbrains.com/docs/agent-skills.html>
