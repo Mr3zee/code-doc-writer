@@ -77,11 +77,15 @@ val suggestAbiValidation: Property<Boolean> = property().convention(true)
 After:
 
 ```
-/** Warns when no binary compatibility validation plugin is active. */
+/** 
+ * Warns when no binary compatibility validation plugin is active. 
+ * 
+ * Default is `true`. 
+ */
 val suggestAbiValidation: Property<Boolean> = property().convention(true)
 ```
 
-Why: the default is in the code. The reason is a design argument.
+Why: even though the default is in the code, it is a public contract that should be stated in the docs.
 
 ## Private doc that repeats the code
 

@@ -16,22 +16,27 @@
 <p>A skill for coding agents. It writes and rewrites code comments and user-facing messages in short plain technical English, based on ASD-STE100 adapted for programming.</p>
 <p>Source: <a href="https://github.com/Mr3zee/code-doc-writer">github.com/Mr3zee/code-doc-writer</a></p>
 
-<h2>Junie</h2>
-<p>User scope:</p>
-<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh</code></pre>
-<p>Project scope, run in the project root:</p>
-<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project</code></pre>
-<p>Check it with <code>/skills</code> in Junie.</p>
+<p>Each script installs for the current user. Add <code>-s -- --project</code> after <code>sh</code> to install into the current project instead.</p>
 
 <h2>Claude Code</h2>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh</code></pre>
+<p>Or by hand:</p>
 <pre><code>claude plugin marketplace add Mr3zee/code-doc-writer
 claude plugin install code-doc-writer@code-doc-writer</code></pre>
 
 <h2>Codex</h2>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh</code></pre>
+<p>Or by hand:</p>
 <pre><code>codex plugin marketplace add Mr3zee/code-doc-writer
 codex plugin add code-doc-writer@code-doc-writer</code></pre>
 
 <h2>pi</h2>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh</code></pre>
+<p>Or by hand:</p>
 <pre><code>pi install git:github.com/Mr3zee/code-doc-writer</code></pre>
+
+<h2>Junie</h2>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh</code></pre>
+<p>Check it with <code>/skills</code> in Junie.</p>
 </body>
 </html>

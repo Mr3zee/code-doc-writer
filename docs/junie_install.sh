@@ -6,18 +6,21 @@
 set -eu
 
 REPO="https://github.com/Mr3zee/code-doc-writer"
-TARGET="$HOME/.junie/skills"
+
+copy_skill() {
+  target="$1"
+  tmp="$(mktemp -d)"
+  trap 'rm -rf "$tmp"' EXIT
+  curl -fsSL "$REPO/archive/refs/heads/master.tar.gz" | tar -xz -C "$tmp"
+  mkdir -p "$target"
+  rm -rf "$target/code-doc-writer"
+  cp -R "$tmp"/code-doc-writer-master/skills/code-doc-writer "$target/"
+  echo "Installed code-doc-writer into $target"
+}
+
 if [ "${1:-}" = "--project" ]; then
-  TARGET="$(pwd)/.junie/skills"
+  copy_skill "$(pwd)/.junie/skills"
+else
+  copy_skill "$HOME/.junie/skills"
 fi
-
-TMP="$(mktemp -d)"
-trap 'rm -rf "$TMP"' EXIT
-
-curl -fsSL "$REPO/archive/refs/heads/master.tar.gz" | tar -xz -C "$TMP"
-mkdir -p "$TARGET"
-rm -rf "$TARGET/code-doc-writer"
-cp -R "$TMP"/code-doc-writer-master/skills/code-doc-writer "$TARGET/"
-
-echo "Installed code-doc-writer into $TARGET"
 echo "Check it with /skills in Junie."

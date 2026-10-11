@@ -22,8 +22,10 @@ the code can't say.
 - Comments in data files are private docs: a `$comment` key in JSON, a `#`
   line in YAML, a comment block in a template.
 - Not README files, websites, changelogs, or commit messages.
-- Change text only. Never change code, imports, annotations, placeholders,
-  or the formatting of code. Keep the comment syntax of the language.
+- The skill governs the text, not the code. In a rewrite task, change text
+  only: no code, imports, annotations, placeholders, or code formatting.
+  When you write code, the skill applies to the comments and messages you
+  write with it. Keep the comment syntax of the language.
 - A generated file gets its text from a template. Edit the template.
 - Keep links, references, and tags that a tool reads, such as `@see`,
   `[Name]`, `{@link}`, `@param`, `@throws`, `{0}`.
@@ -378,4 +380,5 @@ every string value in a `.json` file.
 - Each term has one name in the file.
 - No idiom, no filler, no Latin abbreviation, no semicolon, no dash aside.
 - The lint reports no hard failure, and each soft warning has an answer.
-- The code did not change. Diff the file and look at non-comment lines.
+- In a rewrite task, the code did not change. Diff the file and look at
+  the non-comment lines.
