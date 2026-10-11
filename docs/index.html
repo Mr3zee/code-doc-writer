@@ -16,27 +16,27 @@
 <p>A skill for coding agents. It writes and rewrites code comments and user-facing messages in short plain technical English, based on ASD-STE100 adapted for programming.</p>
 <p>Source: <a href="https://github.com/Mr3zee/code-doc-writer">github.com/Mr3zee/code-doc-writer</a></p>
 
-<p>Each script installs for the current user. Add <code>-s -- --project</code> after <code>sh</code> to install into the current project instead.</p>
+<p>Use the agent's marketplace where it has one. The scripts are the fallback: they run the marketplace command when the agent's CLI is on the PATH, and copy the skill folder otherwise. Add <code>-s -- --project</code> after <code>sh</code> to install into the current project.</p>
 
 <h2>Claude Code</h2>
-<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh</code></pre>
-<p>Or by hand:</p>
 <pre><code>claude plugin marketplace add Mr3zee/code-doc-writer
 claude plugin install code-doc-writer@code-doc-writer</code></pre>
+<p>Fallback:</p>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh</code></pre>
 
 <h2>Codex</h2>
-<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh</code></pre>
-<p>Or by hand:</p>
 <pre><code>codex plugin marketplace add Mr3zee/code-doc-writer
 codex plugin add code-doc-writer@code-doc-writer</code></pre>
+<p>Fallback:</p>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh</code></pre>
 
 <h2>pi</h2>
-<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh</code></pre>
-<p>Or by hand:</p>
 <pre><code>pi install git:github.com/Mr3zee/code-doc-writer</code></pre>
+<p>Fallback:</p>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh</code></pre>
 
 <h2>Junie</h2>
+<p>Junie has no marketplace yet. Use the script, then check it with <code>/skills</code> in Junie.</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh</code></pre>
-<p>Check it with <code>/skills</code> in Junie.</p>
 </body>
 </html>
