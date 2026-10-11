@@ -85,6 +85,14 @@ Into `.junie/skills/` of the current directory:
 curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project
 ```
 
+## Tests
+
+The lint has a test suite in `tests/`. Run it from the repository root:
+
+```
+python3 -m unittest discover tests
+```
+
 ## Publish
 
 ### Claude Code marketplace

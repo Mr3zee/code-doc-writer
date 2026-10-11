@@ -11,10 +11,13 @@ Usage:
     doc_lint.py [--json] [--max-words N] FILE...
 The lint reads a .json file as data and lints every string value that
 has a space in it, so identifiers, paths, and URLs pass.
-The lint reads a .md file as prose: each paragraph, heading, list item,
-and table row is one block. Fenced code is skipped. To lint a text that
-isn't a comment, such as one message or a string in a source file, put
-it in a temporary .md file and lint that file.
+The lint reads a .md file as prose. Each paragraph, heading, list item,
+table row, and front matter value is one block. The lint skips code
+blocks, HTML tags and comments, images, template calls, and link
+reference definitions. It reads the text of a link as prose. In a .md
+file every finding is a soft warning, because the lint can't tell prose
+from markup it doesn't know. To lint one message
+or a string in a source file, put it in a temporary .md file.
 The word lists come from references/words.md next to this script's
 directory: the two swap tables, the delete list, and the figurative list.
 Exit code 1 when a hard rule fails.
@@ -100,7 +103,9 @@ def word_forms(phrase):
     elif re.search(r"[^aeiou]y$", head):
         forms.update({head[:-1] + "ies", head[:-1] + "ied", head + "ing"})
     else:
-        forms.update({head + "s", head + "es", head + "ed", head + "ing"})
+        forms.update({head + "s", head + "ed", head + "ing"})
+        if re.search(r"(s|x|z|ch|sh|o)$", head):
+            forms.add(head + "es")
         if re.search(r"[^aeiou][aeiou][^aeiouwxy]$", head):
             forms.update({head + head[-1] + "ed", head + head[-1] + "ing"})
     return {f + (" " + rest if rest else "") for f in forms}
@@ -109,7 +114,7 @@ def word_forms(phrase):
 if not WORDS_FILE.is_file():
     sys.exit(f"doc_lint.py: {WORDS_FILE} is missing")
 SWAPS, FIGURATIVE = load_words(WORDS_FILE)
-SWAP_RE = {word: re.compile(r"(?<![\w-])" + re.escape(word.rstrip(".")) + r"\.?(?![\w-])") for word in SWAPS}
+SWAP_RE = {word: re.compile(r"(?<![\w-])(" + "|".join(re.escape(f.rstrip(".")) for f in sorted(word_forms(word), key=len, reverse=True)) + r")\.?(?![\w-])") for word in SWAPS}
 FIG_FORMS = sorted({f for w in FIGURATIVE for f in word_forms(w)}, key=len, reverse=True)
 FIG_RE = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in FIG_FORMS) + r")(?![\w-])", re.I)
 
@@ -129,7 +134,9 @@ STATE_WORDS = {"enabled", "disabled", "deprecated", "supported", "unsupported", 
                "installed", "published", "applied", "registered", "resolved", "selected", "set", "defined",
                "declared", "annotated", "marked", "named", "based", "intended", "allowed", "permitted",
                "documented", "undocumented", "sorted", "cached", "locked", "closed", "connected", "nested",
-               "bound", "fixed", "limited", "related", "used", "known", "expected"}
+               "bound", "fixed", "limited", "related", "used", "known", "expected",
+               # Not participles, but they end in "en" or "ed".
+               "open", "even", "often", "then", "when", "ten", "seven", "eleven", "green", "golden", "red"}
 
 PASSIVE = re.compile(
     r"\b(is|are|was|were|be|been|being|gets|get|got)\s+(\w+ed|\w+en|built|done|made|kept|held|"
@@ -137,7 +144,7 @@ PASSIVE = re.compile(
     r"hidden|chosen|driven|bound|cut|hit|split|spread)\b", re.I)
 ING_CLAUSE = re.compile(r"\b(when|while|by|before|after|without|upon|on|for|instead of)\s+\w+ing\b", re.I)
 
-CODE_SPAN = re.compile(r"`[^`]*`|\[[^\]]*\]\([^)]*\)|\[[^\]]*\]|\{@\w+[^}]*\}|<[^>]+>")
+CODE_SPAN = re.compile(r"`[^`]*`|<(code|kbd|samp|var|tt)>.*?</\1>|\[[^\]]*\]\([^)]*\)|\[[^\]]*\]|\{@\w+[^}]*\}|<[^>]+>", re.S)
 SENT_SPLIT = re.compile(r"(?<=[.!?:])\s+(?=[A-Z0-9`\[(\"'])")
 
 
@@ -236,47 +243,156 @@ def json_strings(text):
 
 
 MD_MARKER = re.compile(r"^(#{1,6}\s+|[-*+]\s+|\d+[.)]\s+|>\s*)")
-MD_RULE = re.compile(r"^(---+|\*\*\*+|___+|\|?\s*:?-{3,}[-|:\s]*)$")
+MD_RULE = re.compile(r"^(---+|\*\*\*+|___+|={3,}|\^{3,}|\+{3,}|\|?\s*:?-{3,}[-|:\s]*)$")
+# Skipped lines: a link reference definition, an MDX import or export, a bare admonition fence,
+# an attribute list, a VitePress include, a MyST target, a MyST directive option.
+MD_SKIP = re.compile(r"^(\[[^\]]+\]:\s|import\s|export\s|:::+\s*$|\{[.:#][^}]*\}\s*$|<<<\s|\(\S+\)=$|:[\w-]+:\s)")
+MD_ADMONITION_BLOCK = re.compile(r'^(!!!|\?\?\?\+?|===)\s+(?:[\w+-]+\s+)*"?([^"]*)"?\s*$')  # MkDocs admonition or content tab
+MD_HTML_BLOCK = re.compile(r"^<(style|script|svg|pre)\b", re.I)
+MD_FENCE = re.compile(r"^(`{3,}|~{3,})")
+MD_IMAGE = re.compile(r"!\[[^\]\n]*\]\([^)\n]*\)|!\[[^\]\n]*\]\[[^\]\n]*\]")
+MD_ATTR = re.compile(r"\{[.:#][^}]*\}")  # an attribute list such as {#id}, {.class}, or {: .note}. It isn't a word.
+MD_LINK = re.compile(r"\[([^\]\n]+)\]\([^)\n]*\)|\[([^\]\n]+)\]\[[^\]\n]*\]")
+MD_EMPHASIS = re.compile(r"(?<!\w)(\*{1,2}|_{1,2}|~{1,2}|==|\^\^)(?=[\w(\[`\"'])|(?<=\S)(\*{1,2}|_{1,2}|~{1,2}|==|\^\^)(?=\s|$|[.,:;!?)])")
+# Markup that reads as one word. A Hugo shortcode, a Liquid tag, a Mustache expression, an MDX comment
+# or expression, an attribute list, a MyST role, math, an icon or emoji code, a key combination.
+MD_TEMPLATE = re.compile(
+    r"\{\{<.*?>\}\}|\{\{%.*?%\}\}|\{\{.*?\}\}|\{%.*?%\}|\{/\*.*?\*/\}|\{[\w.-]*\}|\[!\w+\][-+]?|"
+    r"\$\$.*?\$\$|(?<!\w)\$[^$\n]+\$(?!\w)|(?<!\w):[\w+-]+:(?!\w)|\+\+\S+?\+\+|:{3,}", re.S)
+MD_ADMONITION = re.compile(r"^:::+\s*\w*\s*")
+FRONT_KEY = re.compile(r"^([\w-]+):\s*(.*)$")
+
+
+def markdown_prose(line):
+    """Remove images and emphasis marks, unwrap link text, and replace template calls with CODE."""
+    line = MD_ADMONITION.sub("", line)
+    line = MD_ATTR.sub("", line)
+    line = MD_IMAGE.sub(" ", line)
+    line = MD_LINK.sub(lambda m: m.group(1) or m.group(2), line)
+    line = MD_TEMPLATE.sub(" CODE ", line)
+    return MD_EMPHASIS.sub("", line)
 
 
 def markdown_blocks(text):
     """Return (line, prose) pairs for a Markdown document.
 
-    A paragraph, a heading, a list item, or a table row is one block. A
-    fenced code block, a rule, and a table separator row are skipped.
+    A paragraph, a heading, a list item, a table row, or a front matter value
+    is one block. A fenced or indented code block, an HTML comment, a rule, a
+    table separator row, and a link reference definition are skipped.
     """
     out = []
     buf, start = [], [0]
-    in_fence = False
+    fence = ""
+    in_comment = False
+    html_block = ""  # the closing tag of an open <style>, <script>, <svg>, or <pre>
+    in_quote = False
+    list_indent = None  # the content column of the last list item
+    lines = text.splitlines()
+    front = 0
+    if lines and lines[0].strip() == "---":
+        front = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), 0)
 
     def flush():
-        if buf:
-            out.append((start[0], "\n".join(buf)))
+        if buf and any(w.strip() for w in buf):
+            # A template call can span lines. Keep its newlines so line numbers stay right.
+            block = MD_TEMPLATE.sub(lambda m: " CODE " + "\n" * m.group(0).count("\n"), "\n".join(buf))
+            out.append((start[0], block))
         buf.clear()
 
-    for i, raw in enumerate(text.splitlines(), 1):
+    for i, raw in enumerate(lines, 1):
         s = raw.strip()
-        if s.startswith("```") or s.startswith("~~~"):
-            in_fence = not in_fence
+        if i <= front + 1 and front:
+            # Front matter: one block for each value that has a space. A folded scalar continues on indented lines.
+            m = FRONT_KEY.match(raw)
+            if s == "---" or (m and m.group(2) in ("", ">", ">-", "|", "|-")):
+                flush()
+                start[0] = i
+            elif m:
+                flush()
+                start[0] = i
+                value = m.group(2).strip().strip("'\"")
+                if " " in value:
+                    buf.append(markdown_prose(value))
+                    flush()
+            elif raw[:1] in " \t" or s.startswith("- "):
+                nested = FRONT_KEY.match(s)
+                if nested and " " not in nested.group(2):
+                    continue  # a nested key with an identifier value
+                if not buf:
+                    start[0] = i
+                buf.append(markdown_prose(s[2:] if s.startswith("- ") else s))
+            continue
+        if in_comment:
+            if "-->" in s:
+                in_comment = False
+            continue
+        if s.startswith("<!--") and "-->" not in s:
+            flush()
+            in_comment = True
+            continue
+        if html_block:
+            if html_block in s.lower():
+                html_block = ""
+            continue
+        m = MD_HTML_BLOCK.match(s)
+        if m and f"</{m.group(1).lower()}>" not in s.lower():
+            flush()
+            html_block = f"</{m.group(1).lower()}>"
+            continue
+        m = MD_FENCE.match(re.sub(r"^(>\s*)+", "", s))  # a fence in a blockquote
+        if m and not fence:
+            fence = m.group(1)
             flush()
             continue
-        if in_fence:
+        if fence:
+            # A fence closes only on the same character with at least the opening length.
+            if m and m.group(1)[0] == fence[0] and len(m.group(1)) >= len(fence):
+                fence = ""
             continue
-        if not s or MD_RULE.match(s):
+        bare = MD_ADMONITION.sub("", s)
+        if not s or MD_RULE.match(s) or MD_SKIP.match(s) or MD_TEMPLATE.fullmatch(bare) or MD_ATTR.fullmatch(bare):
             flush()
+            in_quote = False
             continue
+        indent = len(raw.expandtabs(4)) - len(raw.expandtabs(4).lstrip())
+        if not buf and indent >= (list_indent or 0) + 4:
+            continue  # an indented code block
         ln = raw.lstrip()
-        m = MD_MARKER.match(ln)
+        m = MD_ADMONITION_BLOCK.match(ln)
         if m:
             flush()
-            ln = ln[m.end():]
             start[0] = i
+            list_indent = indent + 4  # the body has four more spaces of indentation
+            if " " in m.group(2):
+                buf.append(markdown_prose(m.group(2)))
+                flush()
+            continue
+        m = MD_MARKER.match(ln)
+        if m and m.group(1).startswith(">") and buf and "".join(buf).count("<") > "".join(buf).count(">"):
+            m = None  # the ">" closes a multi-line HTML tag
+        ln = markdown_prose(ln)
+        quote = bool(m) and m.group(1).startswith(">")
+        if m:
+            if not (quote and in_quote):
+                flush()
+                start[0] = i
+            ln = markdown_prose(raw.lstrip()[m.end():])
+            if m.group(1).startswith("#"):
+                list_indent = None
+            elif not quote:
+                list_indent = indent + len(m.group(1))
         elif s.startswith("|"):
             flush()
-            ln = " ".join(c.strip() for c in s.strip("|").split("|"))
+            ln = " ".join(c.strip() for c in markdown_prose(s).strip("|").split("|"))
             start[0] = i
         elif not buf:
             start[0] = i
+            if indent == 0:
+                list_indent = None
+        if not ln.strip():
+            flush()  # the line held only markup
+            continue
+        in_quote = quote
         buf.append(ln)
         if m and m.group(1).startswith("#") or s.startswith("|"):
             flush()
@@ -286,11 +402,12 @@ def markdown_blocks(text):
 
 def strip_code(comment):
     """Drop fenced code and shorten code spans so they count as one word."""
-    comment = re.sub(r"```.*?```", " ", comment, flags=re.S)
-    comment = re.sub(r"^\s{4,}\S.*$", " ", comment, flags=re.M)  # indented code
-    comment = re.sub(r"^\s*@\w+\s+\S+", " ", comment, flags=re.M)  # drop the tag and its first word, keep the rest
+    comment = re.sub(r"```.*?```", lambda m: " " + "\n" * m.group(0).count("\n"), comment, flags=re.S)
+    comment = re.sub(r"^[ \t]{4,}\S.*$", " ", comment, flags=re.M)  # indented code
+    comment = re.sub(r"^[ \t]*@\w+[ \t]+\S+", " ", comment, flags=re.M)  # drop the tag and its first word, keep the rest
     comment = re.sub(r"\{\d+\}", " PARAM ", comment)
-    return CODE_SPAN.sub(" CODE ", comment)
+    comment = re.sub(r"&[#\w]+;", " ", comment)  # an HTML entity such as &middot;
+    return CODE_SPAN.sub(lambda m: " CODE " + "\n" * m.group(0).count("\n"), comment)
 
 
 def count_words(sentence):
@@ -299,11 +416,12 @@ def count_words(sentence):
 
 
 def lint_file(path, max_words):
-    text = open(path, encoding="utf-8", errors="replace").read()
+    text = Path(path).read_text(encoding="utf-8", errors="replace")
     findings = []
+    markdown = path.endswith((".md", ".markdown", ".mdx"))
     if path.endswith(".json"):
         blocks = json_strings(text)
-    elif path.endswith((".md", ".markdown")):
+    elif markdown:
         blocks = markdown_blocks(text)
     else:
         blocks = extract_comments(text)
@@ -314,7 +432,7 @@ def lint_file(path, max_words):
         for name, pat in HARD_PATTERNS:
             for m in pat.finditer(prose):
                 ln = line + prose[:m.start()].count("\n")
-                findings.append(dict(file=path, line=ln, rule=name, hard=True,
+                findings.append(dict(file=path, line=ln, rule=name, hard=not markdown,
                                      text=prose[max(0, m.start() - 30):m.end() + 30].replace("\n", " ").strip()))
         flat = re.sub(r"\s+", " ", prose).strip()
         for sent in SENT_SPLIT.split(flat):

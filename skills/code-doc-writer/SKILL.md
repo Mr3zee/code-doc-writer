@@ -403,8 +403,11 @@ The lint reads three kinds of file:
   linted in place.
 - A `.json` file: every string value that has a space in it, so
   identifiers, paths, and URLs pass.
-- A `.md` file: every paragraph, heading, list item, and table row.
-  Fenced code is skipped.
+- A `.md` file: every paragraph, heading, list item, table row, and
+  front matter value. Code blocks, HTML tags, HTML comments, images,
+  template calls, and link reference definitions are skipped. The text
+  of a link is read as prose. Every finding is a soft warning, because
+  the lint can't tell prose from markup it doesn't know.
 
 The lint can't lint one message, one string, or a text in another doc
 format. Put the text in a temporary `.md` file and lint that file.
