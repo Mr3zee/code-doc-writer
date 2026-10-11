@@ -56,7 +56,7 @@ SWAPS = {
     "respectively": "", "particular": "", "certain": "some",
     "desired": "", "corresponding": "related or matching",
     "the following": "these", "as follows": "", "aforementioned": "", "said": "",
-    "e.g.": "for example", "i.e.": "that is", "etc.": "", "etc": "", "vs.": "or", "cf.": "see",
+    "e.g.": "for example", "i.e.": "that is", "etc.": "", "etc": "", "vs.": "or", "cf.": "compare",
     "note that": "", "please note": "", "it is worth noting": "", "it should be noted": "",
     "notably": "", "importantly": "", "interestingly": "", "unfortunately": "",
     "basically": "", "simply": "", "just": "", "actually": "", "essentially": "",

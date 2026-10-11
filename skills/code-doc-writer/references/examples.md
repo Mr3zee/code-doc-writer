@@ -1,8 +1,8 @@
 # Examples
 
-Each pair shows a comment before and after the rewrite. The examples use
-Kotlin syntax. The rules are the same for every language and comment
-syntax.
+Each pair shows a comment before and after the rewrite. Most examples use
+Kotlin syntax. One is a Python docstring. The rules are the same for every
+language and comment syntax.
 
 ## Public doc that explains the implementation
 
@@ -77,15 +77,18 @@ val suggestAbiValidation: Property<Boolean> = property().convention(true)
 After:
 
 ```
-/** 
- * Warns when no binary compatibility validation plugin is active. 
- * 
- * Default is `true`. 
+/**
+ * Whether the build warns when no binary compatibility validation plugin
+ * is active.
+ *
+ * Default is `true`.
  */
 val suggestAbiValidation: Property<Boolean> = property().convention(true)
 ```
 
-Why: even though the default is in the code, it is a public contract that should be stated in the docs.
+Why: the code shows the default, but a public reader doesn't read the
+code. The default is a public contract, so the doc keeps it. The rationale
+for the warning doesn't belong here.
 
 ## Private doc that repeats the code
 
@@ -183,12 +186,14 @@ Before:
 After:
 
 ```
-// Don't read `abiValidation`. Its getter activates ABI validation in
-// Kotlin 2.4 and later. The registered tasks show the activation instead.
+// The getter of `abiValidation` activates ABI validation in Kotlin 2.4
+// and later, so don't read it. The registered tasks show the activation
+// instead.
 ```
 
-Why: this is an external constraint with a version. It stays as a warning
-about a harmful call: the command first, then the risk.
+Why: this is an external constraint with a version, so it stays. It is
+an instruction to the next editor, so the reason comes first and then the
+instruction.
 
 ## Repeated boilerplate across declarations
 

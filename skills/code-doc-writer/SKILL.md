@@ -1,6 +1,19 @@
 ---
 name: code-doc-writer
-description: Write or rewrite every text a person reads in code, in short plain technical English based on ASD-STE100: doc comments (KDoc, Javadoc, JSDoc, Doxygen, docstrings, XML docs, rustdoc, Go doc comments), inline comments, TODO and FIXME notes, and user-facing messages (diagnostics, errors, exceptions, assertions, warnings, deprecation notices, log lines, CLI output, help text, message templates). Use it every time you write, change, or delete such a text, in any language, during any task, even a one-line comment that is a side effect of a code change. Also use it when someone asks to cut the bullshit, simplify, shorten, clean up, remove the noise from, or review docs, comments, or messages in code, or asks for STE or Simplified Technical English. Not for README files, websites, changelogs, or commit messages.
+description: >-
+  Write or rewrite every text a person reads in code or in documentation,
+  in short plain technical English based on ASD-STE100: doc comments
+  (KDoc, Javadoc, JSDoc, Doxygen, docstrings, XML docs, rustdoc, Go doc
+  comments), inline comments, TODO and FIXME notes, user-facing messages
+  (diagnostics, errors, exceptions, assertions, warnings, deprecation
+  notices, log lines, CLI output, help text, message templates), and
+  any documentation: README files, changelogs, docs websites, guides,
+  Markdown, reStructuredText, AsciiDoc, or any other doc format. Use it
+  every time you write, change, or delete such a text, in any language,
+  during any task, even a one-line comment that is a side effect of a
+  code change. Also use it when someone asks to cut the bullshit,
+  simplify, shorten, clean up, remove the noise from, or review docs,
+  comments, or messages, or asks for STE or Simplified Technical English.
 ---
 
 # Code doc writer
@@ -21,7 +34,11 @@ the code can't say.
   change the code" means the logic. A message string is text, not logic.
 - Comments in data files are private docs: a `$comment` key in JSON, a `#`
   line in YAML, a comment block in a template.
-- Not README files, websites, changelogs, or commit messages.
+- Any documentation: README files, changelogs, docs websites, guides,
+  Markdown, reStructuredText, AsciiDoc, or any other doc format. The
+  language rules apply as they are. The scope rules apply with the doc
+  as the reader's one place: a doc states every fact the reader needs
+  there.
 - The skill applies to the text, not the code. In a rewrite task, change
   text only: no code, imports, annotations, placeholders, or code
   formatting.
@@ -76,9 +93,8 @@ a public fact only to add to it.
    and invents none. A qualifier such as "some", "only", or "when X" is a
    fact.
 9. Check each claim about the code against the code or the project's
-   docs. Fix a wrong claim and say so in your report. Find the fact behind
-   an ambiguous sentence and write it. When you can't check a claim, keep
-   its wording and mark it in your report.
+   docs. Fix a wrong claim. Find the fact behind an ambiguous sentence and write it. 
+   When you can't check a claim, keep its wording.
 10. Length isn't a goal. Readability is. A rewrite that passed the keep
     test is shorter in most files. When the result is close to the
     original in length, do the keep test again.
@@ -133,14 +149,14 @@ wins.
 
 Add a fact the original lacks only when the code proves it and a caller
 needs it: what happens on misuse, the error or diagnostic that the code
-reports, the exception it throws. Say in your report what you added.
+reports, the exception it throws.
 
 State a default that is the same for a group of declarations once, on the
 group or the class, not on each member.
 
 When nothing is left, delete the whole comment. When the project requires
 a doc comment on every public declaration, keep one sentence. That sentence
-still helps: it says what the declaration is for, not its name again.
+must still help: it says what the declaration is for, not its name again.
 
 ## Language rules
 
@@ -255,7 +271,7 @@ A message has three parts, in this order:
    sentences.
 2. The fix. One sentence in the imperative. "Add a return type to
    `parse`."
-3. A reference, when more detail exists elsewhere. One link.
+3. A reference, when more detail exists elsewhere. Better as a link.
 
 Rules for messages:
 
@@ -264,9 +280,8 @@ Rules for messages:
   limit of an instruction. Run the lint with `--max-words 20` on a source
   file with messages. A `.json` file has a limit of 20 words. A larger
   `--max-words` doesn't raise it. A smaller one lowers it.
-- Line length rules of the code don't apply to a data file. If the project
-  has a rule for that file, use it.
-- At most three sentences for the problem and the fix. A fixed closing
+- Line length rules of the code don't apply to a file with data. 
+- At best three sentences for the problem and the fix. A fixed closing
   sentence that every message of a kind carries, such as a suppression
   hint, is one short sentence after them and isn't counted.
 - The fix ends the message body. No reason after it. Alternative fixes

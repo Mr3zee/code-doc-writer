@@ -27,7 +27,7 @@ processes").
 | stop | end, terminate, cease, halt |
 | send | transmit |
 | read, write | save (a file), persist |
-| check | verify, ensure, make certain |
+| check, make sure | verify, ensure, guarantee, make certain |
 | add, remove | append (unless order matters), delete, drop, strip |
 | change | modify, alter, adjust, update (unless the term is "update") |
 | call | invoke |
@@ -41,8 +41,8 @@ processes").
 
 ## Computer science terms that stay
 
-These are technical verbs and nouns. They are exact. A plain verb would
-lose meaning. Use each with its one meaning.
+These are technical verbs and nouns. They are exact. A plain verb loses
+meaning. Use each with its one meaning.
 
 - Verbs: compile, parse, resolve, register, configure (an object, not a
   value), enable and disable (a feature, not a permission), install, load
@@ -104,7 +104,7 @@ Filler adds no fact. Delete it and read the sentence again.
 | various, a variety of | different |
 | numerous, multiple | many, several |
 | is able to, is capable of, has the ability to | can |
-| may, might, could | can |
+| may, might, could, would | can |
 | should, ought to | must, or delete |
 | appropriate | applicable, correct |
 | relevant, corresponding | related, matching |
