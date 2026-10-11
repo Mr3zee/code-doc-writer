@@ -1,32 +1,24 @@
 #!/bin/sh
-# Installs the code-doc-writer skill for Claude Code.
+# Copies the code-doc-writer skill into the skills directory of claude.
 #
 # User scope (default):   curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh
 # Project scope:          curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh -s -- --project
-#
-# With the claude CLI on the PATH, the script installs the plugin from the
-# marketplace. Without it, the script copies the skill folder.
 set -eu
 
 REPO="https://github.com/Mr3zee/code-doc-writer"
-
-copy_skill() {
-  target="$1"
-  tmp="$(mktemp -d)"
-  trap 'rm -rf "$tmp"' EXIT
-  curl -fsSL "$REPO/archive/refs/heads/master.tar.gz" | tar -xz -C "$tmp"
-  mkdir -p "$target"
-  rm -rf "$target/code-doc-writer"
-  cp -R "$tmp"/code-doc-writer-master/skills/code-doc-writer "$target/"
-  echo "Installed code-doc-writer into $target"
-}
-
 if [ "${1:-}" = "--project" ]; then
-  copy_skill "$(pwd)/.claude/skills"
-elif command -v claude >/dev/null 2>&1; then
-  claude plugin marketplace add Mr3zee/code-doc-writer
-  claude plugin install code-doc-writer@code-doc-writer
+  TARGET="$(pwd)/.claude/skills"
 else
-  copy_skill "$HOME/.claude/skills"
+  TARGET="$HOME/.claude/skills"
 fi
-echo "Check it with /plugin or by asking Claude Code to rewrite a comment."
+
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+curl -fsSL "$REPO/archive/refs/heads/master.tar.gz" | tar -xz -C "$TMP"
+mkdir -p "$TARGET"
+rm -rf "$TARGET/code-doc-writer"
+cp -R "$TMP"/code-doc-writer-master/skills/code-doc-writer "$TARGET/"
+
+echo "Installed code-doc-writer into $TARGET"
+echo "Ask Claude Code to rewrite a comment to check it."

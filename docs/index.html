@@ -20,7 +20,7 @@
 <p>A skill for coding agents. It writes and rewrites code comments and user-facing messages in short plain technical English, based on ASD-STE100 adapted for programming.</p>
 <p>Source: <a href="https://github.com/Mr3zee/code-doc-writer">github.com/Mr3zee/code-doc-writer</a></p>
 
-<p>Use the agent's marketplace where it has one. The scripts are the fallback: they run the marketplace command when the agent's CLI is on the PATH, and copy the skill folder otherwise.</p>
+<p>Use the agent's marketplace where it has one. The scripts are the fallback. Each one copies the skill folder into the agent's skills directory and nothing else.</p>
 <p>Each script installs for the current user. To install into the current project, run it from the project root with the project flag:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project</code></pre>
 

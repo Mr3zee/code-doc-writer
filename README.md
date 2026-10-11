@@ -13,34 +13,27 @@ The skill reads that file first. Its rules win over the skill.
 ## Install
 
 Use the agent's marketplace where it has one. The scripts in `docs/` are
-the fallback for an agent without a marketplace, or for a machine without
-the agent's CLI. GitHub Pages serves them from
+the fallback. Each one copies the skill folder into the agent's skills
+directory and nothing else. GitHub Pages serves them from
 <https://mr3zee.github.io/code-doc-writer/>. Each script installs for the
-current user. To install into the current project, run it from the project
-root with the project flag:
-
-```
-curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project
-```
+current user. Add `-s -- --project` after `sh` to install into the current
+project instead.
 
 ### Claude Code
-
-This repository is a plugin and a one-plugin marketplace:
 
 ```
 claude plugin marketplace add Mr3zee/code-doc-writer
 claude plugin install code-doc-writer@code-doc-writer
 ```
 
-Fallback:
+Or:
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh
 ```
 
-The script runs the two commands above when the `claude` CLI is on the
-PATH. Otherwise it copies `skills/code-doc-writer` into
-`~/.claude/skills/`, or into `.claude/skills/` with `--project`.
+The script copies `skills/code-doc-writer` into `~/.claude/skills/`, or
+into `.claude/skills/` with `--project`.
 
 ### Codex
 
@@ -57,9 +50,8 @@ Fallback:
 curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh
 ```
 
-The script runs the two commands above when the `codex` CLI is on the
-PATH. Otherwise it copies the skill folder into `~/.agents/skills/`, or
-into `.agents/skills/` with `--project`.
+The script copies the skill folder into `~/.agents/skills/`, or into
+`.agents/skills/` with `--project`.
 
 ### pi
 
@@ -76,8 +68,7 @@ Fallback:
 curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh
 ```
 
-The script runs `pi install` when the `pi` CLI is on the PATH. Otherwise
-it copies the skill folder into `~/.agents/skills/`, or into
+The script copies the skill folder into `~/.agents/skills/`, or into
 `.agents/skills/` with `--project`. The skill appears as
 `/skill:code-doc-writer`.
 
