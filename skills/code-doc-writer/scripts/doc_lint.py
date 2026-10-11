@@ -10,68 +10,104 @@ language that uses /* */, //, # or triple-quoted strings.
 Usage:
     doc_lint.py [--json] [--max-words N] FILE...
 The lint reads a .json file as data and lints every string value that
-has a space in it, so identifiers, paths, and URLs pass. A .json file has
-a limit of 20 words, or less with --max-words.
+has a space in it, so identifiers, paths, and URLs pass.
+The word lists come from references/words.md next to this script's
+directory: the two swap tables, the delete list, and the figurative list.
 Exit code 1 when a hard rule fails.
 """
 import json
 import re
 import sys
+from pathlib import Path
 
 MAX_WORDS = 25
 
-# word or phrase -> replacement or "" (delete). STE alternatives, adapted for
-# programming: exact computer-science verbs (enable, configure, handle, check,
-# register, resolve, return, throw, support) aren't listed because they stay.
-SWAPS = {
-    "utilize": "use", "utilise": "use", "leverage": "use", "employ": "use",
-    "perform": "do", "carry out": "do", "execute": "run", "invoke": "call",
-    "ensure": "make sure", "verify": "check or make sure", "guarantee": "make sure",
-    "obtain": "get", "retrieve": "get", "acquire": "get", "fetch": "get (unless a git fetch)",
-    "determine": "find", "locate": "find", "discover": "find",
-    "indicate": "show", "represent": "show or stand for", "denote": "show", "signify": "show",
-    "facilitate": "help", "assist": "help",
-    "provide": "give", "supply": "give", "furnish": "give",
-    "allow": "let", "permit": "let",
-    "assume": "think or expect", "consider": "think",
-    "comprise": "have", "consist of": "have", "constitute": "be",
-    "commence": "start", "initiate": "start", "terminate": "stop", "cease": "stop",
-    "modify": "change", "alter": "change", "adjust": "change",
-    "approximately": "about", "additionally": "also", "furthermore": "also", "moreover": "also",
-    "however": "but", "nevertheless": "but", "nonetheless": "but",
-    "therefore": "thus", "hence": "thus", "consequently": "thus",
-    "subsequently": "then", "afterwards": "then", "whilst": "while",
-    "via": "through", "within": "in", "upon": "on", "amongst": "among",
-    "prior to": "before", "subsequent to": "after", "in order to": "to",
-    "so as to": "to", "as well as": "and", "in addition to": "and", "along with": "and",
-    "due to the fact that": "because", "owing to": "because", "since": "because (if causal)",
-    "in the event that": "if", "in case": "if", "in the case of": "for",
-    "with regard to": "about", "with respect to": "about", "regarding": "about",
-    "in terms of": "", "a number of": "some", "a variety of": "different",
-    "various": "different", "numerous": "many", "multiple": "many or several",
-    "is able to": "can", "has the ability to": "can", "is capable of": "can",
-    "it is possible to": "can", "may": "can", "might": "can", "could": "can",
-    "should": "must, or delete", "ought to": "must",
-    "appropriate": "applicable", "relevant": "related", "respective": "",
-    "respectively": "", "particular": "", "certain": "some",
-    "desired": "", "corresponding": "related or matching",
-    "the following": "these", "as follows": "", "aforementioned": "", "said": "",
-    "e.g.": "for example", "i.e.": "that is", "etc.": "", "etc": "", "vs.": "or", "cf.": "compare",
-    "note that": "", "please note": "", "it is worth noting": "", "it should be noted": "",
-    "notably": "", "importantly": "", "interestingly": "", "unfortunately": "",
-    "basically": "", "simply": "", "just": "", "actually": "", "essentially": "",
-    "effectively": "", "really": "", "very": "", "quite": "", "rather": "",
-    "obviously": "", "of course": "", "clearly": "", "naturally": "",
-    "deliberately": "", "on purpose": "", "intentionally": "", "by design": "",
-    "honest": "", "honestly": "", "meant for": "for", "meant to": "",
-    "in other words": "", "that is to say": "", "needless to say": "",
-    "in this way": "", "at this point": "", "currently": "", "at the moment": "",
-    "keep in mind": "", "bear in mind": "", "make sure to": "",
-    "which is why": "thus", "which means that": "so", "so that": "so, or to",
-    "in such a way that": "so", "to the extent that": "if",
-    "there is": "restructure", "there are": "restructure",
-    "a.k.a.": "also", "aka": "also", "say,": "for example",
-}
+WORDS_FILE = Path(__file__).resolve().parent.parent / "references" / "words.md"
+
+
+def split_items(cell):
+    """Split "a, b (condition), c" into (word, condition) pairs."""
+    items, depth, buf = [], 0, ""
+    for ch in cell:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        if ch == "," and depth == 0:
+            items.append(buf)
+            buf = ""
+        else:
+            buf += ch
+    items.append(buf)
+    out = []
+    for item in items:
+        m = re.match(r"\s*(.*?)\s*(\([^)]*\))?\s*$", item)
+        word = m.group(1).strip().strip('"').lower()
+        if word:
+            out.append((word, " " + m.group(2) if m.group(2) else ""))
+    return out
+
+
+def load_words(path):
+    """Return (swaps, figurative) from words.md. swaps maps a word to its hint."""
+    swaps, figurative = {}, []
+    section = ""
+    bullets = []
+
+    def flush():
+        for text in bullets:
+            if section.startswith("words to delete"):
+                for word, _ in split_items(text):
+                    swaps[word] = "delete"
+            elif section.startswith("often figurative"):
+                figurative.extend(word for word, _ in split_items(text))
+        bullets.clear()
+
+    for ln in path.read_text(encoding="utf-8").splitlines():
+        if ln.startswith("## "):
+            flush()
+            section = ln[3:].strip().lower()
+        elif ln.startswith("|"):
+            cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+            if len(cells) != 2 or cells[0] in ("Use", "Replace") or set(cells[0]) <= set("-"):
+                continue
+            if section.startswith("plain verbs"):
+                for word, cond in split_items(cells[1]):
+                    swaps[word] = cells[0] + cond
+            elif section.startswith("words with a plainer swap"):
+                for word, cond in split_items(cells[0]):
+                    swaps[word] = cells[1] + cond
+        elif ln.startswith("- "):
+            bullets.append(ln[2:])
+        elif ln.startswith("  ") and bullets:
+            bullets[-1] += " " + ln.strip()
+        else:
+            flush()
+    flush()
+    return swaps, figurative
+
+
+def word_forms(phrase):
+    """Return the regular inflections of the first word of a phrase."""
+    head, _, rest = phrase.partition(" ")
+    forms = {head}
+    if head.endswith("e"):
+        forms.update({head + "s", head + "d", head[:-1] + "ing"})
+    elif re.search(r"[^aeiou]y$", head):
+        forms.update({head[:-1] + "ies", head[:-1] + "ied", head + "ing"})
+    else:
+        forms.update({head + "s", head + "es", head + "ed", head + "ing"})
+        if re.search(r"[^aeiou][aeiou][^aeiouwxy]$", head):
+            forms.update({head + head[-1] + "ed", head + head[-1] + "ing"})
+    return {f + (" " + rest if rest else "") for f in forms}
+
+
+if not WORDS_FILE.is_file():
+    sys.exit(f"doc_lint.py: {WORDS_FILE} is missing")
+SWAPS, FIGURATIVE = load_words(WORDS_FILE)
+SWAP_RE = {word: re.compile(r"(?<![\w-])" + re.escape(word.rstrip(".")) + r"\.?(?![\w-])") for word in SWAPS}
+FIG_FORMS = sorted({f for w in FIGURATIVE for f in word_forms(w)}, key=len, reverse=True)
+FIG_RE = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in FIG_FORMS) + r")(?![\w-])", re.I)
 
 HARD_PATTERNS = [
     ("semicolon", re.compile(r";")),
@@ -79,30 +115,6 @@ HARD_PATTERNS = [
     # A hyphen with a space on each side, inside a sentence, is a dash aside. A list item starts its line with a hyphen.
     ("dash-aside", re.compile(r"(?<=[\w,.)]) - (?=\w)")),
 ]
-
-# Words that are usually figurative in code docs. Literal use is fine.
-FIGURATIVE = [
-    "bake", "baked", "bakes", "travel", "travels", "live", "lives", "land", "lands",
-    "ship", "ships", "shipped", "surface", "surfaces", "bubble", "bubbles", "swallow",
-    "swallows", "guard", "guards", "wire", "wires", "wired", "plumb", "spell out",
-    "spelled out", "spelling out", "fall back", "falls back", "under the hood",
-    "out of the box", "stand in", "stands in", "stand-in", "pick up", "picks up",
-    "kick in", "kicks in", "kick off", "kicks off", "fire", "fires", "world", "flavor",
-    "blessed", "sane", "sanity", "happy path", "magic", "glue", "plumbing", "footgun",
-    "gotcha", "boils down", "at the end of the day", "in a nutshell", "on the fly",
-    "come into play", "comes into play", "take care of", "takes care of", "hand off",
-    "hands off", "handed off", "gate", "gates", "gated", "funnel", "funnels", "wrap up",
-    "wraps up", "roll up", "rolls up", "walk", "walks", "sits", "sit on top", "umbrella",
-    "lightweight", "heavy lifting", "first class", "first-class", "citizen", "sibling",
-    "cousin", "stale", "fresh", "sweep", "sweeps", "bleed", "bleeds", "leak", "leaks",
-    "poison", "pollute", "pollutes", "hijack", "steal", "steals", "promote", "demote",
-    "demoted", "promoted", "honor", "honors", "honour", "honours", "respect", "respects",
-    "aware", "friendly", "smart", "dumb", "naive", "clever", "trick", "tricks", "hack",
-    "pay", "pays", "paid", "afford", "affords",
-    "invite", "invites", "go through", "goes through", "pull in", "pulls in",
-    "hot path", "escape hatch", "through the lens", "bridge", "bridges",
-]
-FIG_RE = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in FIGURATIVE) + r")(?![\w-])", re.I)
 
 CONTRACT = {"cannot": "can't", "do not": "don't", "does not": "doesn't", "is not": "isn't",
             "will not": "won't", "did not": "didn't", "are not": "aren't", "was not": "wasn't"}
@@ -253,11 +265,9 @@ def lint_file(path, max_words):
                 findings.append(dict(file=path, line=line, rule="long-sentence", hard=False,
                                      text=f"{n} words: {sent[:120]}"))
         lower = " " + re.sub(r"\s+", " ", prose.lower()) + " "
-        for word, repl in SWAPS.items():
-            pat = r"(?<![\w-])" + re.escape(word) + r"(?![\w-])"
-            for m in re.finditer(pat, lower):
+        for word, hint in SWAPS.items():
+            for m in SWAP_RE[word].finditer(lower):
                 ln = line + prose.lower()[:max(0, m.start())].count("\n")
-                hint = f"use '{repl}'" if repl and repl != "restructure" else ("restructure" if repl == "restructure" else "delete")
                 findings.append(dict(file=path, line=ln, rule="word", hard=False,
                                      text=f"'{word}': {hint}"))
         for m in CONTRACT_RE.finditer(prose):
@@ -294,8 +304,7 @@ def main(argv):
         return 2
     all_findings = []
     for f in files:
-        limit = min(max_words, 20) if f.endswith(".json") else max_words
-        all_findings.extend(lint_file(f, limit))
+        all_findings.extend(lint_file(f, max_words))
     hard = [x for x in all_findings if x["hard"]]
     if as_json:
         print(json.dumps(dict(findings=all_findings, hard=len(hard), soft=len(all_findings) - len(hard)), indent=1))

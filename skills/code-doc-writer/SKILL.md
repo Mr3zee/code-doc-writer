@@ -21,13 +21,15 @@ description: >-
 Write comments and messages so a reader gets the facts fast. The language
 rules come from ASD-STE100 (Simplified Technical English), adapted for
 programming. The scope rules come from one idea: a comment is only for what
-the code can't say.
+the code can't say. Each sentence costs the reader time and the next
+editor upkeep, so the text that gives the facts in the fewest sentences
+wins. No comment is a good result when the code gives every fact.
 
 ## Scope
 
 - Every doc comment, inline comment, and user-facing message that you write
-  or change, during any task. A new text follows the same rules as a
-  rewrite.
+  or change, during any task. A rewrite follows the same rules as a new
+  text.
 - User-facing messages are diagnostics, errors, warnings, log lines, CLI
   output, and message templates in data files. A task that names only the
   comments of a file still covers the messages in that file. "Don't
@@ -39,15 +41,14 @@ the code can't say.
   language rules apply as they are. The scope rules apply with the doc
   as the reader's one place: a doc states every fact the reader needs
   there.
-- The skill applies to the text, not the code. In a rewrite task, change
-  text only: no code, imports, annotations, placeholders, or code
-  formatting.
-  When you write code, the skill applies to the comments and messages you
-  write with it. Keep the comment syntax of the language.
+- The skill applies to the text, not the code. When you write code, the
+  skill applies to the comments and messages you write with it. Keep the
+  comment syntax of the language. When the task is a rewrite, change text
+  only: no code, imports, annotations, placeholders, or code formatting.
 - A generated file gets its text from a template. Edit the template.
 - Keep the syntax of links, references, and tags that a tool reads, such
   as `@see`, `[Name]`, `{@link}`, `{0}`. The keep test decides whether a
-  `@param` or a `@throws` stays.
+  `@param` or a `@throws` is there.
 
 ## Two readers
 
@@ -82,20 +83,24 @@ a public fact only to add to it.
    rules in that file win over this skill.
 2. Read the code first. If the purpose isn't clear, read the signature,
    the body, and the callers.
-3. Read the text. Split it into sentences.
+3. Draft the text: one sentence for each fact that the reader needs. In a
+   rewrite, the draft is the existing text, split into sentences.
 4. Apply the keep test to each sentence. Delete or keep.
-5. Rewrite each kept sentence with the language rules.
+5. Write each kept sentence with the language rules.
 6. Put the sentences in this order: what it is, what the reader must know,
    tags.
-7. Run `scripts/doc_lint.py` on the file. Fix every hard failure. Read
+7. Check each claim about the code against the code or the project's
+   docs. Fix a wrong claim. Find the fact behind an ambiguous sentence and
+   write it. When you can't check a claim that comes from the original
+   text, keep its wording.
+8. Run `scripts/doc_lint.py` on the file. Fix every hard failure. Read
    each soft warning and fix it or leave it with a reason.
-8. Compare the result with the original. The rewrite keeps every kept fact
-   and invents none. A qualifier such as "some", "only", or "when X" is a
-   fact.
-9. Check each claim about the code against the code or the project's
-   docs. Fix a wrong claim. Find the fact behind an ambiguous sentence and write it. 
-   When you can't check a claim, keep its wording.
-10. Length isn't a goal. Readability is. A rewrite that passed the keep
+9. In a rewrite, compare the result with the original. The result has
+   every kept fact and invents none. A qualifier such as "some", "only",
+   or "when X" is a fact.
+10. Read the result as the reader. A sentence that doesn't change what the
+    reader does or knows goes. Readability is the measure, and a shorter
+    text with the same facts reads faster. A rewrite that passed the keep
     test is shorter in most files. When the result is close to the
     original in length, do the keep test again.
 11. After each self-contained part (a file, a class, a group of related
@@ -114,8 +119,9 @@ your work to the person, use the same language rules.
 
 Delete a sentence when one of these is true:
 
-- The name, type, signature, or modifier already says it. For public docs
-  the default value isn't in this list. It stays.
+- The name, type, signature, or modifier already says it. One exception:
+  a public doc states the default value, because the reader doesn't open
+  the source.
 - In private docs: another comment or the public doc already says it. Keep
   it in one place. Link to that place with a reference.
 - It explains a reason to a reader who already knows the domain.
@@ -140,14 +146,15 @@ Keep a sentence when one of these is true:
   condition from the rationale, and never delete the sentence.
 - It gives a constraint from outside the code: a tool bug, a protocol, a
   version limit, a file format. Without the sentence, the next editor
-  breaks it. Give the source of the constraint.
+  breaks it. Give the source of the constraint. A workaround has to have
+  a bug link.
 - It gives the one invariant that the code relies on and doesn't check.
 - It tells why the code doesn't do the obvious thing.
 
 When a delete rule and a keep rule both match a sentence, the keep rule
 wins.
 
-Add a fact the original lacks only when the code proves it and a caller
+Add a fact that the draft lacks only when the code proves it and a caller
 needs it: what happens on misuse, the error or diagnostic that the code
 reports, the exception it throws.
 
@@ -200,17 +207,20 @@ Words:
 - One term for one thing. Pick a name and use it everywhere in the module.
 - Technical nouns and verbs of the domain stay. Identifiers, tool names,
   and the domain's own verbs (compile, resolve, register, publish,
-  serialize) are the exact words. Don't replace them with a plain verb that
-  is less exact.
-- No idioms, metaphors, or personification. Each word keeps its literal
-  meaning. "A bakes its logic into B" is wrong. "The oven bakes the bread"
+  serialize, fall back) are the exact words. Don't replace them with a
+  plain verb that is less exact.
+- No idioms, metaphors, or personification. Each word has its literal
+  meaning only. "A bakes its logic into B" is wrong. "The oven bakes the bread"
   is literal. Say the plain fact: "A stores the value at construction."
   - Often figurative in code docs: bake, ship, live, travel, guard,
-    surface, swallow, bubble, wire, fall back, under the hood, out of the
-    box, happy path, world, flavor, honor, respect, aware, sibling, pay,
-    afford, invite, go through, pull in.
+    surface, swallow, bubble, wire, under the hood, out of the box, happy
+    path, world, flavor, honor, respect, aware, sibling, pay, afford,
+    invite, go through, pull in. `references/words.md` has the full list.
   - A word with a technical meaning in the domain stays: catch an
-    exception, pin a version.
+    exception, pin a version, fall back to a default.
+- "Keep" means "don't remove". It doesn't state a requirement or a state.
+  "A workaround has to have a bug link", not "a workaround keeps its bug
+  link". "The list has one entry", not "the list keeps one entry".
 - No filler. Delete: note that, basically, simply, just, actually,
   essentially, of course, it is worth noting, in order to, deliberately, on
   purpose, honest, by design.
@@ -239,10 +249,10 @@ Words:
   faster than words do. Keep it short. No comments inside the example. For
   more examples, link to the website.
 - `@param` only when the name and the type don't say it. On a public
-  declaration a `@param` keeps one short sentence even when the type has
-  the long form, because the reader reads one declaration at a time.
-  `@return` only when the first sentence doesn't say it. `@throws` when the
-  caller can catch or check for the exception. An argument or
+  declaration a `@param` gets one short sentence even when the doc of the
+  type gives the long form, because the reader reads one declaration at a
+  time. `@return` only when the first sentence doesn't say it. `@throws`
+  when the caller can catch or check for the exception. An argument or
   configuration error that stops the program gets no tag.
 - Most doc comments fit in one to three sentences.
 - A one-line doc on a member of a group can be a noun phrase: "The timeout
@@ -259,7 +269,8 @@ Words:
 - Delete a comment that says what the next lines do. The code says it.
   This includes a comment that names the algorithm: "binary search",
   "lower bound", "iterate over the handlers".
-- The keep test applies. A workaround keeps its bug link.
+- The keep test applies.
+- A workaround has to have a bug link. When the comment has none, add it.
 - Put the comment where the decision is.
 - No history. "Previously", "used to", "now" belong to version control.
 
@@ -277,10 +288,9 @@ Rules for messages:
 
 - Search the file for string literals that a person reads.
 - In a message every sentence, the problem included, gets the 20-word
-  limit of an instruction. Run the lint with `--max-words 20` on a source
-  file with messages. A `.json` file has a limit of 20 words. A larger
-  `--max-words` doesn't raise it. A smaller one lowers it.
-- Line length rules of the code don't apply to a file with data. 
+  limit of an instruction. Run the lint with `--max-words 20` on a file
+  with messages.
+- Line length rules of the code don't apply to a file with data.
 - At best three sentences for the problem and the fix. A fixed closing
   sentence that every message of a kind carries, such as a suppression
   hint, is one short sentence after them and isn't counted.
@@ -309,65 +319,62 @@ key, or update the tool.
 
 ## Examples
 
-Before:
+Before (public):
 
 ```
 /**
- * Acknowledges that the annotated declaration deliberately exposes a type
- * from a dependency that isn't published transitively to consumers.
- *
- * A type from an `implementation` dependency is available while the
- * library compiles, but it is absent from a consumer's compile classpath,
- * so the consumer can't use the declaration that mentions it. Declaring the
- * dependency with `api` is the usual fix.
- *
- * Apply this annotation when the environment that loads the library
- * supplies the dependency on its own, so publishing it transitively isn't
- * needed or not possible. Name that environment in the [description],
- * since nothing about the declaration shows where the dependency comes from.
+ * Marks a declaration so that the unused-code check deliberately skips
+ * it, which is useful because some declarations are only ever reached
+ * through reflection (for instance by a serialization framework or a
+ * dependency injection container), so the static analysis that the check
+ * performs cannot see any callers and would otherwise flag them as dead
+ * code, which is misleading. Note that the check still runs on everything
+ * else in the file.
  */
+annotation class UsedByReflection(val caller: String)
 ```
 
 After:
 
 ```
 /**
- * Exempts the declaration from `PUBLIC_TYPE_FROM_NON_TRANSITIVE_DEPENDENCY`.
+ * Exempts the declaration from the unused-code check.
  *
- * Use it when the runtime environment supplies the dependency. Name that
- * environment in [description].
+ * Use it when only reflection calls the declaration. Name the framework
+ * that calls it in [caller].
  *
- * @see [Public type from a non-transitive dependency](https://example.org/checks/public-type-from-non-transitive-dependency)
+ * @see [Unused code](https://example.org/checks/unused-code)
  */
+annotation class UsedByReflection(val caller: String)
 ```
 
 Before (private):
 
 ```
-// The report deliberately stays outside the task's declared outputs. JVM
-// compile tasks prepare every extra output as a directory, while the
-// compiler plugin needs a file. Collection mode always executes and bypasses
-// the build cache so an internal report can never be stale or absent after
-// an up-to-date/cache hit.
+// We deliberately keep the index file outside the output directory. The
+// packaging step zips everything in the output directory, and an index
+// inside the archive would be picked up by the loader as a plugin, which
+// is obviously not what we want. The index is regenerated on every run
+// anyway, so it can never go stale.
 ```
 
 After:
 
 ```
-// Not a declared output: the compile task creates a directory for a
-// declared output, and the compiler plugin needs a file. The task never
-// uses the build cache, so the report is always written.
+// Not in the output directory: the packaging step zips that directory,
+// and the loader treats each file in the archive as a plugin. Every run
+// regenerates the index.
 ```
 
 Before (restates the code):
 
 ```
-/** Configures the [javaInterop] diagnostic group. */
-fun javaInterop(configure: JavaInterop.() -> Unit)
+/** Configures the retry policy. */
+fun retryPolicy(configure: RetryPolicy.() -> Unit)
 ```
 
-After: no comment. When the project requires one: "Enables or disables the
-Java interoperability checks and sets their severity."
+After: no comment. When the project requires one: "Sets how many times a
+failed request runs again, and the delay between the runs."
 
 `references/examples.md` has more pairs, including inline comments,
 docstrings, and messages.
@@ -382,8 +389,8 @@ Hard failures (exit code 1): a semicolon, a dash aside. Soft warnings: a
 sentence over the limit, a filler word, a Latin abbreviation, a word with
 a plainer swap, a figurative word, a likely passive, an "-ing" clause, an
 uncontracted negative. A soft warning is a question, not an order. The
-lint checks a subset of `references/words.md`. Read the table for the
-rest. The lint reads `/* */`, `//`, `#`, and triple-quoted strings in
+lint reads its word lists from `references/words.md`, so the two never
+differ. The lint reads `/* */`, `//`, `#`, and triple-quoted strings in
 source files. In a `.json` file it reads every string value that has a
 space in it, so identifiers, paths, and URLs pass.
 
@@ -392,7 +399,7 @@ space in it, so identifiers, paths, and URLs pass.
 - Every sentence passed the keep test.
 - No public doc names a private type, a module, a build tool, or an
   internal mechanism.
-- Public docs keep defaults and tell when to use the declaration.
+- Public docs state defaults and tell when to use the declaration.
 - Each term has one name in the file.
 - No idiom, no filler, no Latin abbreviation, no semicolon, no dash aside.
 - The lint reports no hard failure, and each soft warning has an answer.
