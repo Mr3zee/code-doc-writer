@@ -7,7 +7,8 @@
 <style>
   body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #222; }
   pre { background: #f4f4f4; padding: .75rem; overflow-x: auto; }
-  code { font-family: ui-monospace, monospace; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .95em; background: #f4f4f4; padding: .1em .3em; border-radius: 3px; }
+  pre code { background: none; padding: 0; }
   h2 { margin-top: 2rem; }
 </style>
 </head>
@@ -16,7 +17,9 @@
 <p>A skill for coding agents. It writes and rewrites code comments and user-facing messages in short plain technical English, based on ASD-STE100 adapted for programming.</p>
 <p>Source: <a href="https://github.com/Mr3zee/code-doc-writer">github.com/Mr3zee/code-doc-writer</a></p>
 
-<p>Use the agent's marketplace where it has one. The scripts are the fallback: they run the marketplace command when the agent's CLI is on the PATH, and copy the skill folder otherwise. Add <code>-s -- --project</code> after <code>sh</code> to install into the current project.</p>
+<p>Use the agent's marketplace where it has one. The scripts are the fallback: they run the marketplace command when the agent's CLI is on the PATH, and copy the skill folder otherwise.</p>
+<p>Each script installs for the current user. To install into the current project, run it from the project root with the project flag:</p>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project</code></pre>
 
 <h2>Claude Code</h2>
 <pre><code>claude plugin marketplace add Mr3zee/code-doc-writer

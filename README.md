@@ -16,8 +16,12 @@ Use the agent's marketplace where it has one. The scripts in `docs/` are
 the fallback for an agent without a marketplace, or for a machine without
 the agent's CLI. GitHub Pages serves them from
 <https://mr3zee.github.io/code-doc-writer/>. Each script installs for the
-current user. Add `-s -- --project` after `sh` to install into the current
-project instead.
+current user. To install into the current project, run it from the project
+root with the project flag:
+
+```
+curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project
+```
 
 ### Claude Code
 
