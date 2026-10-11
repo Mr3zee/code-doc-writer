@@ -1,0 +1,12 @@
+{
+  "name": "code-doc-writer",
+  "description": "Write and rewrite code comments and user-facing messages in short plain technical English.",
+  "owner": { "name": "Alexander Sysoev" },
+  "plugins": [
+    {
+      "name": "code-doc-writer",
+      "source": "./",
+      "description": "Write and rewrite code comments and user-facing messages in short plain technical English."
+    }
+  ]
+}

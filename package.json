@@ -1,0 +1,10 @@
+{
+  "name": "code-doc-writer",
+  "version": "0.1.0",
+  "description": "A skill for coding agents: write and rewrite code comments and user-facing messages in short plain technical English.",
+  "keywords": ["pi-package", "agent-skill", "documentation"],
+  "license": "UNLICENSED",
+  "pi": {
+    "skills": ["./skills"]
+  }
+}

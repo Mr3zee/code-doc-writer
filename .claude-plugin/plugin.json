@@ -1,0 +1,7 @@
+{
+  "name": "code-doc-writer",
+  "version": "0.1.0",
+  "description": "Write and rewrite doc comments and code comments in short plain technical English based on ASD-STE100.",
+  "author": { "name": "Alexander Sysoev" },
+  "skills": ["./skills/code-doc-writer"]
+}
