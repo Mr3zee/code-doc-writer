@@ -1,8 +1,10 @@
 #!/bin/sh
-# Copies the code-doc-writer skill into the skills directory of codex.
+# Installs the code-doc-writer skill for Codex.
 #
-# User scope (default):   curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh
-# Project scope:          curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh -s -- --project
+# Into `~/.agents/skills`:
+#     curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh
+# Into `.agents/skills` of the current directory:
+#     curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh -s -- --project
 set -eu
 
 REPO="https://github.com/Mr3zee/code-doc-writer"
@@ -21,4 +23,4 @@ rm -rf "$TARGET/code-doc-writer"
 cp -R "$TMP"/code-doc-writer-master/skills/code-doc-writer "$TARGET/"
 
 echo "Installed code-doc-writer into $TARGET"
-echo "Restart Codex if the skill does not appear."
+echo "If the skill doesn't appear, restart Codex."

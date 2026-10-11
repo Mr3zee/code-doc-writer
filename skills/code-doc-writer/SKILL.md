@@ -2,18 +2,19 @@
 name: code-doc-writer
 description: >-
   Write or rewrite every text a person reads in code or in documentation,
-  in short plain technical English based on ASD-STE100: doc comments
-  (KDoc, Javadoc, JSDoc, Doxygen, docstrings, XML docs, rustdoc, Go doc
-  comments), inline comments, TODO and FIXME notes, user-facing messages
-  (diagnostics, errors, exceptions, assertions, warnings, deprecation
-  notices, log lines, CLI output, help text, message templates), and
-  any documentation: README files, changelogs, docs websites, guides,
-  Markdown, reStructuredText, AsciiDoc, or any other doc format. Use it
-  every time you write, change, or delete such a text, in any language,
-  during any task, even a one-line comment that is a side effect of a
-  code change. Also use it when someone asks to cut the bullshit,
-  simplify, shorten, clean up, remove the noise from, or review docs,
-  comments, or messages, or asks for STE or Simplified Technical English.
+  in short plain technical English based on ASD-STE100. The texts are
+  doc comments (KDoc, Javadoc, JSDoc, Doxygen, docstrings, XML docs,
+  rustdoc, Go doc comments), inline comments, TODO and FIXME notes,
+  user-facing messages (diagnostics, errors, exceptions, assertions,
+  warnings, deprecation notices, log lines, CLI output, help text,
+  message templates), and documentation in any format (README files,
+  changelogs, docs websites, guides, Markdown, reStructuredText,
+  AsciiDoc). Use it every time you write, change, or delete such a text,
+  in any language, during any task. A one-line comment that is a side
+  effect of a code change counts. Also use it when someone asks to cut
+  the bullshit, simplify, shorten, clean up, remove the noise from, or
+  review docs, comments, or messages, and when someone asks for STE or
+  Simplified Technical English.
 ---
 
 # Code doc writer
@@ -21,41 +22,42 @@ description: >-
 Write comments, messages, and documentation so a reader gets the facts
 fast. The language rules come from ASD-STE100 (Simplified Technical
 English), adapted for programming. The scope rules come from one idea: a
-comment is only for what the code can't say. Each sentence costs the
-reader time and the next editor upkeep, so the text that gives the facts
-in the fewest sentences wins. No comment is a good result when the code
-gives every fact.
+comment is only for what the code can't show. The text that gives the
+facts in the fewest sentences is the best text.
 
 ## Scope
 
 - Every doc comment, inline comment, and user-facing message that you write
   or change, during any task. A rewrite follows the same rules as a new
   text.
-- User-facing messages are diagnostics, errors, warnings, log lines, CLI
-  output, and message templates in data files. A task that names only the
-  comments of a file still covers the messages in that file. "Don't
-  change the code" means the logic. A message string is text, not logic.
+- User-facing messages are diagnostics, errors, exceptions, assertions,
+  warnings, deprecation notices, log lines, CLI output, help text, and
+  message templates in data files.
+- A task that names only the comments of a file still covers the messages
+  in that file. "Don't change the code" means the logic. A message string
+  is text, not logic.
 - Comments in data files are private docs: a `$comment` key in JSON, a `#`
   line in YAML, a comment block in a template.
 - Any documentation: README files, changelogs, docs websites, guides,
   Markdown, reStructuredText, AsciiDoc, or any other doc format. The
-  language rules apply as they are. The scope rules apply with the doc
-  as the reader's one place: a doc states every fact the reader needs
-  there.
+  language rules apply as they are. For the scope rules, the doc is the
+  reader's one place.
 - The skill applies to the text, not the code. When you write code, the
   skill applies to the comments and messages you write with it. Keep the
-  comment syntax of the language. When the task is a rewrite, change text
-  only: no code, imports, annotations, placeholders, or code formatting.
+  comment syntax of the language.
+- When the task is a rewrite, change text only: no code, imports,
+  annotations, placeholders, or code formatting.
 - A generated file gets its text from a template. Edit the template.
 - Keep the syntax of links, references, and tags that a tool reads, such
-  as `@see`, `[Name]`, `{@link}`, `{0}`. The keep test decides whether a
-  `@param` or a `@throws` is there.
+  as `@see`, `[Name]`, `{@link}`, `{0}`. [Shape of a doc
+  comment](#shape-of-a-doc-comment) decides whether a `@param` or a
+  `@throws` is there.
 
 ## Two readers
 
 | | Public API docs | Private docs |
 |---|---|---|
-| Reader | A user of the library. Smart, but doesn't read the source. | A developer of this codebase. Knows the domain and the modules. |
+| Reader | A user of the library. Knows the domain, but doesn't read the source. | A developer of this codebase. Knows the domain and the modules. |
 | Tell | What it does. When to use it. How to call it. What the caller must know. | Only what the code can't show. |
 | Never | Implementation, internal types, other modules, build tooling, history, design arguments. | What the code already shows. What the public docs already say. History. |
 
@@ -65,14 +67,10 @@ never depend on has private docs. Check the module's purpose before you
 decide.
 
 A public reader learns from one place: the website, the README, the doc
-comment in the IDE, or one overload of a function. Each place carries the
-facts the reader needs there. A public doc can repeat a fact that the
-website, the README, or another overload also gives. Never send a public
-reader elsewhere for a fact the caller must know. Use `@see` for related
-API, not for required facts.
-
-A public doc also states a lazy or cached computation and a side effect.
-The reader doesn't open the source.
+comment in the IDE, or one overload of a function. Each place states
+every fact the reader needs there, even when the website, the README, or
+another overload also states it. Use `@see` for related API, not for a
+fact the caller must know.
 
 A private reader has the source and the public docs. A private doc repeats
 a public fact only to add to it.
@@ -81,33 +79,34 @@ a public fact only to add to it.
 
 1. Read `DOCS_GUIDELINE.md` in the repository root if it exists. It holds
    the project's terms, link formats, required tags, and exceptions. The
-   rules in that file win over this skill.
+   rules in that file override this skill.
 2. Read the code first. If the purpose isn't clear, read the signature,
    the body, and the callers.
 3. Draft the text: one sentence for each fact that the reader needs. In a
    rewrite, the draft is the existing text, split into sentences.
 4. Apply the keep test to each sentence. Delete or keep.
 5. Write each kept sentence with the language rules.
-6. Put the sentences in this order: what it is, what the reader must know,
-   tags.
+6. Put the sentences in the order that [Shape of a doc
+   comment](#shape-of-a-doc-comment) gives.
 7. Check each claim about the code against the code or the project's
    docs. Fix a wrong claim. Find the fact behind an ambiguous sentence and
    write it. When you can't check a claim that comes from the original
    text, keep its wording.
-8. Run `scripts/doc_lint.py` on the file. When the text isn't in a form
-   the lint reads, put it in a temporary `.md` file and lint that file.
-   Fix every hard failure. Read each soft warning and fix it or leave it
-   with a reason.
+8. Run `scripts/doc_lint.py` on the file. The lint is a complement to
+   steps 4 to 7, never a replacement for them: it finds punctuation and
+   listed words, and nothing else. Fix every hard failure. Read each soft
+   warning and fix it or leave it with a reason. [Lint](#lint) tells what
+   the lint reads and what it can't see.
 9. In a rewrite, compare the result with the original. The result has
    every kept fact and invents none. A qualifier such as "some", "only",
    or "when X" is a fact.
-10. Read the result as the reader. A sentence that doesn't change what the
-    reader does or knows goes. Readability is the measure, and a shorter
-    text with the same facts reads faster. A rewrite that passed the keep
-    test is shorter in most files. When the result is close to the
-    original in length, do the keep test again.
+10. Read the result as the reader. This step, not the lint, decides
+    whether the text is complete. Delete a sentence that doesn't change what
+    the reader does or knows. Readability is the measure, and a shorter
+    text with the same facts reads faster. When the result is close to
+    the original in length, do the keep test again.
 11. After each self-contained part (a file, a class, a group of related
-    declarations), read the result once more for leftovers:
+    declarations), read the result once more for:
     - A sentence that referred to a deleted sentence.
     - A link to a deleted section.
     - A term that the rest of the file no longer uses.
@@ -123,17 +122,17 @@ your work to the person, use the same language rules.
 Delete a sentence when one of these is true:
 
 - The name, type, signature, or modifier already says it. One exception:
-  a public doc states the default value, because the reader doesn't open
-  the source.
+  a public doc states the default value.
 - In private docs: another comment or the public doc already says it. Keep
   it in one place. Link to that place with a reference.
 - It explains a reason to a reader who already knows the domain.
 - It teaches the host language, tool, or platform instead of this
   declaration. How to declare a dependency, what `this` is in a block, how
   a language feature works.
-- It tells history, intent, or feelings and nothing else. Delete the
-  intent word first ("deliberately", "on purpose", "honest", "intended",
-  "we chose"). Then apply the keep test to the fact that remains.
+- It tells history, intent, or feelings and nothing else. "Previously",
+  "used to", and "now" belong to version control. Delete the intent word
+  first ("deliberately", "on purpose", "honest", "intended", "we chose").
+  Then apply the keep test to the fact that remains.
 - It describes what other parts of the system do with this declaration.
   For public docs this is always a delete. For private docs, keep it only
   when a search for the name doesn't find the other part.
@@ -143,30 +142,29 @@ Keep a sentence when one of these is true:
 
 - A caller can misuse the declaration without it: a precondition, a side
   effect, thread safety, ownership, order of calls, or a unit.
-- It tells a public reader when to use the declaration. This rule wins
-  over every delete rule. When the original gives no real condition, take
-  one from the project's docs or keep the original. Never infer a
-  condition from the rationale, and never delete the sentence.
+- It tells a public reader when to use the declaration. When the original
+  gives no real condition, take one from the project's docs or keep the
+  original. Never infer a condition from the rationale.
 - It gives a constraint from outside the code: a tool bug, a protocol, a
-  version limit, a file format. Without the sentence, the next editor
-  breaks it. Give the source of the constraint. A workaround has to have
-  a bug link.
+  version limit, a file format. Give the source of the constraint. A
+  workaround has to have a bug link. When the comment has none, add it.
 - It gives the one invariant that the code relies on and doesn't check.
 - It tells why the code doesn't do the obvious thing.
 
 When a delete rule and a keep rule both match a sentence, the keep rule
-wins.
+overrides the delete rule.
 
 Add a fact that the draft lacks only when the code proves it and a caller
-needs it: what happens on misuse, the error or diagnostic that the code
-reports, the exception it throws.
+needs it. Such a fact is what happens on misuse, the error or diagnostic
+that the code reports, or the exception it throws.
 
 State a default that is the same for a group of declarations once, on the
 group or the class, not on each member.
 
-When nothing is left, delete the whole comment. When the project requires
-a doc comment on every public declaration, keep one sentence. That sentence
-must still help: it says what the declaration is for, not its name again.
+When the keep test deletes every sentence, delete the whole comment. When
+the project requires a doc comment on every public declaration, keep one
+sentence. That sentence must still help: it says what the declaration is
+for, not its name again.
 
 ## Language rules
 
@@ -177,8 +175,8 @@ Sentences:
 
 - Aim for at most 20 words in an instruction and 25 in a description. A
   code span, a link, a number, a placeholder, or a parenthesis counts as one
-  word. When a split makes the sentence harder to read, or drops a fact,
-  keep the long sentence.
+  word. When a split makes the sentence harder to read, or removes a
+  fact, keep the long sentence.
 - One topic in each sentence. One instruction in each sentence. A cause and
   its effect are one topic: keep them in one sentence with "because" or
   "so". Two facts that only stand next to each other get two sentences.
@@ -219,14 +217,14 @@ Words:
     surface, swallow, bubble, wire, under the hood, out of the box, happy
     path, world, flavor, honor, respect, aware, sibling, pay, afford,
     invite, go through, pull in. `references/words.md` has the full list.
-  - A word with a technical meaning in the domain stays: catch an
-    exception, pin a version, fall back to a default.
+  - A word that looks figurative but has a technical meaning in the
+    domain stays: catch an exception, pin a version.
 - "Keep" means "don't remove". It doesn't state a requirement or a state.
   "A workaround has to have a bug link", not "a workaround keeps its bug
   link". "The list has one entry", not "the list keeps one entry".
 - No filler. Delete: note that, basically, simply, just, actually,
-  essentially, of course, it is worth noting, deliberately, on purpose,
-  honest, by design. "In order to" becomes "to".
+  essentially, of course, it is worth noting. "In order to" becomes "to".
+  `references/words.md` has the full list.
 - No Latin abbreviations. "For example", not "e.g.". "That is", not
   "i.e.". Delete "etc." and name the items or stop the list.
 - No hedge modals. "May", "might", "could", "would" become "can". Replace
@@ -251,12 +249,13 @@ Words:
 - A code example when it shows the reader how to use the declaration
   faster than words do. Keep it short. No comments inside the example. For
   more examples, link to the website.
-- `@param` only when the name and the type don't say it. On a public
-  declaration a `@param` gets one short sentence even when the doc of the
-  type gives the long form, because the reader reads one declaration at a
-  time. `@return` only when the first sentence doesn't say it. `@throws`
-  when the caller can catch or check for the exception. An argument or
-  configuration error that stops the program gets no tag.
+- Tags, in this order:
+  - `@param` only when the name and the type don't say it. A public
+    `@param` gets one short sentence even when the doc of the type gives
+    the long form, because the reader opens one declaration at a time.
+  - `@return` only when the first sentence doesn't say it.
+  - `@throws` when the caller can catch or check for the exception. An
+    argument or configuration error that stops the program gets no tag.
 - Most doc comments fit in one to three sentences.
 - A one-line doc on a member of a group can be a noun phrase: "The timeout
   of `read`." A noun phrase has no verb, so the sentence rules don't apply
@@ -269,13 +268,10 @@ Words:
   imperative only for an instruction to the next editor, with the reason
   first: "The getter has a side effect in library version 2.4, so don't
   read it."
-- Delete a comment that says what the next lines do. The code says it.
+- Delete a comment that says what the next lines do. The code shows it.
   This includes a comment that names the algorithm: "binary search",
   "lower bound", "iterate over the handlers".
-- The keep test applies.
-- A workaround has to have a bug link. When the comment has none, add it.
 - Put the comment where the decision is.
-- No history. "Previously", "used to", "now" belong to version control.
 
 ## Messages
 
@@ -291,10 +287,10 @@ Rules for messages:
 
 - Search the file for string literals that a person reads.
 - In a message every sentence, the problem included, gets the 20-word
-  limit of an instruction. Put the messages in a temporary `.md` file and
-  run the lint on it with `--max-words 20`.
-- Line length rules of the code don't apply to a file with data.
-- At best three sentences for the problem and the fix. A fixed closing
+  limit of an instruction. Lint the messages with `--max-words 20`.
+- The line length limit of the code doesn't apply to a message in a data
+  file.
+- At most three sentences for the problem and the fix. A fixed closing
   sentence that every message of a kind carries, such as a suppression
   hint, is one short sentence after them and isn't counted.
 - The fix ends the message body. No reason after it. Alternative fixes
@@ -384,6 +380,23 @@ docstrings, and messages.
 
 ## Lint
 
+The lint is a complement to the rules, never the primary check. It finds
+punctuation and the words in `references/words.md`, and nothing else. It
+can't see:
+
+- A sentence that fails the keep test.
+- A fact stated twice.
+- A reason given to a reader who knows it.
+- A figurative use of a word that isn't in the list.
+- An ambiguous sentence.
+- A passive with a contracted verb.
+- A wrong claim about the code.
+
+Those are most of the rules, and you find them only when you read the
+text as the reader. A text with no findings can still break most of this
+skill. Apply the rules first, then run the lint. Never report a clean
+lint as the result of the skill.
+
 ```
 python3 scripts/doc_lint.py [--json] [--max-words N] FILE...
 ```
@@ -399,15 +412,15 @@ differ.
 The lint reads three kinds of file:
 
 - A source file: the `/* */`, `//`, and `#` comments and the triple-quoted
-  strings. String literals aren't read, so a message in source code isn't
-  linted in place.
+  strings. The lint doesn't read string literals, so it doesn't lint a
+  message in source code in place.
 - A `.json` file: every string value that has a space in it, so
   identifiers, paths, and URLs pass.
 - A `.md` file: every paragraph, heading, list item, table row, and
-  front matter value. Code blocks, HTML tags, HTML comments, images,
-  template calls, and link reference definitions are skipped. The text
-  of a link is read as prose. Every finding is a soft warning, because
-  the lint can't tell prose from markup it doesn't know.
+  front matter value. The lint skips code blocks, HTML tags, HTML
+  comments, images, template calls, and link reference definitions. It
+  reads the text of a link as prose. Every finding is a soft warning,
+  because the lint can't tell prose from markup it doesn't know.
 
 The lint can't lint one message, one string, or a text in another doc
 format. Put the text in a temporary `.md` file and lint that file.
@@ -419,7 +432,9 @@ format. Put the text in a temporary `.md` file and lint that file.
   internal mechanism.
 - Public docs state defaults and tell when to use the declaration.
 - Each term has one name in the file.
+- No fact appears twice in the file.
 - No idiom, no filler, no Latin abbreviation, no semicolon, no dash aside.
-- The lint reports no hard failure, and each soft warning has an answer.
 - In a rewrite task, the code didn't change. Diff the file and look at
   the non-comment lines.
+- The lint reports no hard failure, and each soft warning has an answer.
+  A clean lint doesn't show that the items above hold. Reading does.

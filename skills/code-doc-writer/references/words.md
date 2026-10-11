@@ -45,8 +45,8 @@ separated by commas, a condition in parentheses after the item.
 | think, expect | assume, consider |
 | tell | inform, notify |
 
-All words in the instead of have an exception: 
-`Unless the term is '<this word>'.`
+Each word in the "Instead of" column has one exception: it stays when it
+is the exact term of the domain.
 
 ## Computer science terms that stay
 

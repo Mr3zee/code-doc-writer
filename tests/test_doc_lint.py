@@ -177,9 +177,15 @@ class StripCodeTest(unittest.TestCase):
         self.assertEqual(out.count("\n"), 4)
 
     def test_indented_code_rule_stays_on_one_line(self):
-        # A blank line followed by a short indented line is not one indented code line.
+        # A blank line followed by a short indented line isn't one indented code line.
         out = dl.strip_code("Text.\n \n\n   @param name the key")
         self.assertIn("the key", out)
+
+    def test_docstring_body_is_dedented_before_the_indented_code_rule(self):
+        out = dl.strip_code("Returns the size.\n\n    The second line; here.\n\n        x = 1\n    ")
+        self.assertIn("The second line; here.", out)
+        self.assertNotIn("x = 1", out)
+        self.assertEqual(out.count("\n"), 5)
 
     def test_count_words(self):
         self.assertEqual(dl.count_words("Returns the size (in bytes) of `file`."), 6)
@@ -450,6 +456,21 @@ class RulesTest(unittest.TestCase):
                  */
                 """)
         self.assertEqual([x["line"] for x in f if x["rule"] == "semicolon"], [3])
+        self.assertEqual([x["line"] for x in f if x["rule"] == "word"], [4])
+
+    def test_indented_docstring_is_linted_past_its_first_line(self):
+        with TempFiles() as t:
+            f = t.lint("a.py", """
+                def f():
+                    \"\"\"Returns the size.
+
+                    The second line utilizes a word; it has a semicolon.
+
+                        example = f()
+                    \"\"\"
+                    return 1
+                """)
+        self.assertEqual([x["line"] for x in f if x["rule"] == "semicolon"], [4])
         self.assertEqual([x["line"] for x in f if x["rule"] == "word"], [4])
 
     def test_json_file(self):

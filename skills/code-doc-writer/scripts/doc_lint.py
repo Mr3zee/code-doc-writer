@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
-"""Lint the comments and doc comments of source files.
+"""Lints the prose in source comments, JSON strings, and Markdown files.
+
+Usage:
+    doc_lint.py [--json] [--max-words N] FILE...
 
 Hard failures (exit code 1): a semicolon, an em dash, an en dash, ` -- `,
 or a ` - ` aside. Soft warnings: a long sentence, a filler word, a word
 with a plainer swap, a Latin abbreviation, a figurative word, a likely
-passive, an "-ing" clause, and an uncontracted negative. Works on any
-language that uses /* */, //, # or triple-quoted strings.
+passive, an "-ing" clause, and an uncontracted negative.
 
-Usage:
-    doc_lint.py [--json] [--max-words N] FILE...
-The lint reads a .json file as data and lints every string value that
-has a space in it, so identifiers, paths, and URLs pass.
-The lint reads a .md file as prose. Each paragraph, heading, list item,
-table row, and front matter value is one block. The lint skips code
-blocks, HTML tags and comments, images, template calls, and link
-reference definitions. It reads the text of a link as prose. In a .md
-file every finding is a soft warning, because the lint can't tell prose
-from markup it doesn't know. To lint one message
-or a string in a source file, put it in a temporary .md file.
-The word lists come from references/words.md next to this script's
+A source file: the lint reads the /* */, //, and # comments and the
+triple-quoted strings. It doesn't read string literals. Any language
+with these comment markers works.
+A .json file: the lint reads every string value that has a space in it,
+so identifiers, paths, and URLs pass.
+A .md file: the lint reads each paragraph, heading, list item, table row,
+and front matter value as one block. It skips code blocks, HTML tags and
+comments, images, template calls, and link reference definitions. It
+reads the text of a link as prose. Every finding is a soft warning,
+because the lint can't tell prose from markup it doesn't know.
+To lint one message or a string, put it in a temporary .md file.
+
+The word lists come from references/words.md next to the scripts
 directory: the two swap tables, the delete list, and the figurative list.
-Exit code 1 when a hard rule fails.
 """
 import json
 import re
@@ -33,7 +35,7 @@ WORDS_FILE = Path(__file__).resolve().parent.parent / "references" / "words.md"
 
 
 def split_items(cell):
-    """Split "a, b (condition), c" into (word, condition) pairs."""
+    """Splits "a, b (condition), c" into (word, condition) pairs."""
     items, depth, buf = [], 0, ""
     for ch in cell:
         if ch == "(":
@@ -56,7 +58,7 @@ def split_items(cell):
 
 
 def load_words(path):
-    """Return (swaps, figurative) from words.md. swaps maps a word to its hint."""
+    """Returns (swaps, figurative) from words.md. swaps maps a word to its hint."""
     swaps, figurative = {}, []
     section = ""
     bullets = []
@@ -95,7 +97,7 @@ def load_words(path):
 
 
 def word_forms(phrase):
-    """Return the regular inflections of the first word of a phrase."""
+    """Returns the regular inflections of the first word of a phrase."""
     head, _, rest = phrase.partition(" ")
     forms = {head}
     if head.endswith("e"):
@@ -149,7 +151,7 @@ SENT_SPLIT = re.compile(r"(?<=[.!?:])\s+(?=[A-Z0-9`\[(\"'])")
 
 
 def extract_comments(text):
-    """Return (line_number, comment_text) pairs, one for each comment block."""
+    """Returns (line_number, comment_text) pairs, one for each comment block."""
     i, n, line = 0, len(text), 1
     out = []
     while i < n:
@@ -209,7 +211,7 @@ def extract_comments(text):
 
 
 def json_strings(text):
-    """Return (line, prose) pairs for the string values of a JSON document. A list of strings is one pair."""
+    """Returns (line, prose) pairs for the string values of a JSON document. A list of strings is one pair."""
     data = json.loads(text)
     out = []
 
@@ -264,7 +266,7 @@ FRONT_KEY = re.compile(r"^([\w-]+):\s*(.*)$")
 
 
 def markdown_prose(line):
-    """Remove images and emphasis marks, unwrap link text, and replace template calls with CODE."""
+    """Removes images and emphasis marks, unwraps link text, and replaces template calls with CODE."""
     line = MD_ADMONITION.sub("", line)
     line = MD_ATTR.sub("", line)
     line = MD_IMAGE.sub(" ", line)
@@ -274,11 +276,11 @@ def markdown_prose(line):
 
 
 def markdown_blocks(text):
-    """Return (line, prose) pairs for a Markdown document.
+    """Returns (line, prose) pairs for a Markdown document.
 
     A paragraph, a heading, a list item, a table row, or a front matter value
-    is one block. A fenced or indented code block, an HTML comment, a rule, a
-    table separator row, and a link reference definition are skipped.
+    is one block. The lint skips a fenced or indented code block, an HTML
+    comment, a rule, a table separator row, and a link reference definition.
     """
     out = []
     buf, start = [], [0]
@@ -400,11 +402,27 @@ def markdown_blocks(text):
     return out
 
 
+def dedent_body(comment):
+    """Removes the indentation that every line after the first shares.
+
+    A docstring inside a function has the indentation of the function body, so the
+    indented-code rule skips its lines without this step. The first line starts
+    right after the quotes, so it has no part in the margin.
+    """
+    lines = comment.split("\n")
+    body = [ln for ln in lines[1:] if ln.strip()]
+    if not body:
+        return comment
+    margin = min(len(ln) - len(ln.lstrip(" \t")) for ln in body)
+    return "\n".join(lines[:1] + [ln[margin:] if ln.strip() else ln for ln in lines[1:]])
+
+
 def strip_code(comment):
-    """Drop fenced code and shorten code spans so they count as one word."""
+    """Removes fenced code and shortens each code span to one word."""
+    comment = dedent_body(comment)
     comment = re.sub(r"```.*?```", lambda m: " " + "\n" * m.group(0).count("\n"), comment, flags=re.S)
     comment = re.sub(r"^[ \t]{4,}\S.*$", " ", comment, flags=re.M)  # indented code
-    comment = re.sub(r"^[ \t]*@\w+[ \t]+\S+", " ", comment, flags=re.M)  # drop the tag and its first word, keep the rest
+    comment = re.sub(r"^[ \t]*@\w+[ \t]+\S+", " ", comment, flags=re.M)  # remove the tag and its first word, keep the rest
     comment = re.sub(r"\{\d+\}", " PARAM ", comment)
     comment = re.sub(r"&[#\w]+;", " ", comment)  # an HTML entity such as &middot;
     return CODE_SPAN.sub(lambda m: " CODE " + "\n" * m.group(0).count("\n"), comment)

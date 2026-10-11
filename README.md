@@ -111,7 +111,7 @@ on the Claude Code plugins documentation site.
 
 The marketplace file is `.agents/plugins/marketplace.json`, and the plugin
 manifest is `plugin.json` at the root, with `.codex-plugin/plugin.json` as
-the fallback for older Codex versions. Codex discovers the skill from
+the fallback for older Codex versions. Codex finds the skill in
 `skills/`. Push the repository and tell users to run
 `codex plugin marketplace add Mr3zee/code-doc-writer`.
 
@@ -125,4 +125,4 @@ gallery, and users run `pi install npm:code-doc-writer`.
 
 Junie has no marketplace yet. The install script is in `docs/`, which
 GitHub Pages serves at `https://mr3zee.github.io/code-doc-writer/`. A push
-to `master` updates the page.
+to `master` deploys the page.

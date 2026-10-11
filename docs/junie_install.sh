@@ -1,8 +1,10 @@
 #!/bin/sh
-# Copies the code-doc-writer skill into the skills directory of junie.
+# Installs the code-doc-writer skill for Junie.
 #
-# User scope (default):   curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh
-# Project scope:          curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project
+# Into `~/.junie/skills`:
+#     curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh
+# Into `.junie/skills` of the current directory:
+#     curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project
 set -eu
 
 REPO="https://github.com/Mr3zee/code-doc-writer"

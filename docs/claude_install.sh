@@ -1,8 +1,10 @@
 #!/bin/sh
-# Copies the code-doc-writer skill into the skills directory of claude.
+# Installs the code-doc-writer skill for Claude Code.
 #
-# User scope (default):   curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh
-# Project scope:          curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh -s -- --project
+# Into `~/.claude/skills`:
+#     curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh
+# Into `.claude/skills` of the current directory:
+#     curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh -s -- --project
 set -eu
 
 REPO="https://github.com/Mr3zee/code-doc-writer"
@@ -21,4 +23,4 @@ rm -rf "$TARGET/code-doc-writer"
 cp -R "$TMP"/code-doc-writer-master/skills/code-doc-writer "$TARGET/"
 
 echo "Installed code-doc-writer into $TARGET"
-echo "Ask Claude Code to rewrite a comment to check it."
+echo "To check it, ask Claude Code to rewrite a comment."

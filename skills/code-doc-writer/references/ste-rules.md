@@ -19,8 +19,8 @@ comments. Read it when a rule in SKILL.md needs its source.
 - 1.4 Use only the approved forms of verbs and adjectives.
 - 1.5 Technical nouns: a word is a technical noun when it belongs to a
   subject field. STE lists 22 categories. Category 19 is computer science.
-- 1.6 Use an unapproved word only when it is a technical noun. "Backup" is
-  rejected as a word but accepted as a computer term.
+- 1.6 Use an unapproved word only when it is a technical noun. STE rejects
+  "backup" as a word but accepts it as a computer term.
 - 1.7 Don't use a technical noun as a verb. "Apply oil", not "oil the
   part". In code, "cache the result" is an accepted technical verb.
 - 1.8 Use the technical nouns of your field. Use the name the code uses.
