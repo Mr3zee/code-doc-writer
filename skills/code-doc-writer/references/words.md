@@ -7,10 +7,11 @@ when STE rejects them. STE itself has this exception in its technical noun
 and technical verb categories (rules 1.5 and 1.12, category "computer
 processes").
 
-`scripts/doc_lint.py` reads its word lists from this file: the two swap
-tables, the delete list, and the figurative list. A change here changes
-the lint. Keep the format of each list: one table row or one bullet, items
-separated by commas, a condition in parentheses after the item.
+`scripts/doc_lint.py` in the skill directory reads its word lists from
+this file: the two swap tables, the delete list, and the figurative list.
+A change here changes the lint. Keep the format of each list: one table
+row or one bullet, items separated by commas, a condition in parentheses
+after the item.
 
 ## Plain verbs to prefer
 
@@ -19,7 +20,7 @@ separated by commas, a condition in parentheses after the item.
 | do | perform, carry out, conduct |
 | get, fetch | obtain, retrieve, acquire, receive (a value) |
 | give | provide, supply, furnish, offer |
-| make | create (an object), construct, build (an object), produce |
+| make | create (an object), construct, produce |
 | use | utilize, utilise, employ, leverage, make use of |
 | set | assign, specify (a value) |
 | show | indicate, display, represent, denote, signify, reflect |
@@ -51,7 +52,8 @@ is the exact term of the domain.
 ## Computer science terms that stay
 
 These are technical verbs and nouns. They are exact. A plain verb loses
-meaning. Use each with its one meaning.
+meaning. Use each with its one meaning. "Cache" and "override" are both a
+verb and a noun.
 
 - Verbs: compile, parse, resolve, register, configure (an object, not a
   value), enable and disable (a feature, not a permission), install, load
@@ -166,9 +168,9 @@ baking) and asks.
 
 ## Contractions
 
-STE writes every word in full. This skill differs: use the common negative
-contractions can't, don't, doesn't, isn't, won't, didn't, aren't, wasn't.
-Never "cannot". Don't use other contractions (it's, you're, we've).
+Use the common negative contractions can't, don't, doesn't, isn't,
+won't, didn't, aren't, wasn't. Never "cannot". Write every other word in
+full: no it's, you're, or we've.
 
 ## Modal verbs
 

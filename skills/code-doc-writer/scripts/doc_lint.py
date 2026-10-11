@@ -14,11 +14,12 @@ triple-quoted strings. It doesn't read string literals. Any language
 with these comment markers works.
 A .json file: the lint reads every string value that has a space in it,
 so identifiers, paths, and URLs pass.
-A .md file: the lint reads each paragraph, heading, list item, table row,
-and front matter value as one block. It skips code blocks, HTML tags and
-comments, images, template calls, and link reference definitions. It
-reads the text of a link as prose. Every finding is a soft warning,
-because the lint can't tell prose from markup it doesn't know.
+A .md, .markdown, or .mdx file: the lint reads each paragraph, heading,
+list item, table row, and front matter value as one block. It skips code
+blocks, HTML tags and comments, images, template calls, and link reference
+definitions. It reads the text of a link as prose and counts the link as
+one word. Every finding is a soft warning, because the lint can't tell
+prose from markup it doesn't know.
 To lint one message or a string, put it in a temporary .md file.
 
 The word lists come from references/words.md next to the scripts
@@ -147,7 +148,14 @@ PASSIVE = re.compile(
 ING_CLAUSE = re.compile(r"\b(when|while|by|before|after|without|upon|on|for|instead of)\s+\w+ing\b", re.I)
 
 CODE_SPAN = re.compile(r"`[^`]*`|<(code|kbd|samp|var|tt)>.*?</\1>|\[[^\]]*\]\([^)]*\)|\[[^\]]*\]|\{@\w+[^}]*\}|<[^>]+>", re.S)
-SENT_SPLIT = re.compile(r"(?<=[.!?:])\s+(?=[A-Z0-9`\[(\"'])")
+SENT_SPLIT = re.compile(r"(?<=[.!?:])\s+(?=[A-Z0-9`\[(\"'\x02])")
+# A Markdown link keeps its text for the word checks, and the marks make it one word for the count.
+LINK_MARK = re.compile(r"\x02([^\x03]*)\x03")
+
+
+def unmark(text):
+    """Removes the link marks."""
+    return LINK_MARK.sub(r"\1", text)
 
 
 def extract_comments(text):
@@ -266,11 +274,11 @@ FRONT_KEY = re.compile(r"^([\w-]+):\s*(.*)$")
 
 
 def markdown_prose(line):
-    """Removes images and emphasis marks, unwraps link text, and replaces template calls with CODE."""
+    """Removes images and emphasis marks, marks link text, and replaces template calls with CODE."""
     line = MD_ADMONITION.sub("", line)
     line = MD_ATTR.sub("", line)
     line = MD_IMAGE.sub(" ", line)
-    line = MD_LINK.sub(lambda m: m.group(1) or m.group(2), line)
+    line = MD_LINK.sub(lambda m: "\x02" + (m.group(1) or m.group(2)) + "\x03", line)
     line = MD_TEMPLATE.sub(" CODE ", line)
     return MD_EMPHASIS.sub("", line)
 
@@ -295,7 +303,7 @@ def markdown_blocks(text):
         front = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), 0)
 
     def flush():
-        if buf and any(w.strip() for w in buf):
+        if buf and any(unmark(w).strip() for w in buf):
             # A template call can span lines. Keep its newlines so line numbers stay right.
             block = MD_TEMPLATE.sub(lambda m: " CODE " + "\n" * m.group(0).count("\n"), "\n".join(buf))
             out.append((start[0], block))
@@ -391,7 +399,7 @@ def markdown_blocks(text):
             start[0] = i
             if indent == 0:
                 list_indent = None
-        if not ln.strip():
+        if not unmark(ln).strip():
             flush()  # the line held only markup
             continue
         in_quote = quote
@@ -429,7 +437,8 @@ def strip_code(comment):
 
 
 def count_words(sentence):
-    s = re.sub(r"\([^)]*\)", " PAREN ", sentence)
+    s = LINK_MARK.sub(" LINK ", sentence)
+    s = re.sub(r"\([^)]*\)", " PAREN ", s)
     return len([w for w in re.split(r"\s+", s.strip()) if w and re.search(r"\w", w)])
 
 
@@ -446,18 +455,19 @@ def lint_file(path, max_words):
     for line, raw in blocks:
         if not raw.strip():
             continue
-        prose = strip_code(raw)
+        marked = strip_code(raw)
+        prose = unmark(marked)
         for name, pat in HARD_PATTERNS:
             for m in pat.finditer(prose):
                 ln = line + prose[:m.start()].count("\n")
                 findings.append(dict(file=path, line=ln, rule=name, hard=not markdown,
                                      text=prose[max(0, m.start() - 30):m.end() + 30].replace("\n", " ").strip()))
-        flat = re.sub(r"\s+", " ", prose).strip()
+        flat = re.sub(r"\s+", " ", marked).strip()
         for sent in SENT_SPLIT.split(flat):
             n = count_words(sent)
             if n > max_words:
                 findings.append(dict(file=path, line=line, rule="long-sentence", hard=False,
-                                     text=f"{n} words: {sent[:120]}"))
+                                     text=f"{n} words: {unmark(sent)[:120]}"))
         lower = " " + re.sub(r"\s+", " ", prose.lower()) + " "
         for word, hint in SWAPS.items():
             for m in SWAP_RE[word].finditer(lower):

@@ -189,7 +189,8 @@ def resolve(self, name):
     Attempts to resolve the given name by looking it up in the local
     scope first and then, if it is not found there, falling back to the
     parent scope (if any), which allows nested scopes to shadow outer
-    bindings in the usual way.
+    bindings in the usual way. If the name is not found anywhere, None
+    is returned.
     """
 ```
 

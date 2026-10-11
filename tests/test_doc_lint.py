@@ -194,7 +194,7 @@ class StripCodeTest(unittest.TestCase):
 
 class MarkdownBlocksTest(unittest.TestCase):
     def blocks(self, text):
-        return dl.markdown_blocks(dedent(text))
+        return [(ln, dl.unmark(b)) for ln, b in dl.markdown_blocks(dedent(text))]
 
     def test_paragraphs_headings_and_lists(self):
         blocks = self.blocks("""
@@ -331,6 +331,19 @@ class MarkdownBlocksTest(unittest.TestCase):
             ![badge](https://img.shields.io/x.svg) Read the [getting started guide](https://e.org) and [the spec][spec].
             """)
         self.assertEqual(blocks[0][1].strip(), "Read the getting started guide and the spec.")
+
+    def test_link_text_is_marked_and_counts_as_one_word(self):
+        blocks = dl.markdown_blocks("Read [the full guide](https://e.org) now.")
+        self.assertEqual(blocks[0][1], "Read \x02the full guide\x03 now.")
+        self.assertEqual(dl.count_words(blocks[0][1]), 3)
+        self.assertEqual(dl.unmark(blocks[0][1]), "Read the full guide now.")
+
+    def test_a_link_counts_as_one_word_in_a_markdown_file(self):
+        with TempFiles() as t:
+            text = "Read [the full guide to timeouts and retries](https://e.org) before the call.\n"
+            findings = t.lint("a.md", text, max_words=4)
+            self.assertEqual(texts(findings, "long-sentence"), ["5 words: Read the full guide to timeouts and retries before the call."])
+            self.assertEqual(texts(t.lint("b.md", text, max_words=5), "long-sentence"), [])
 
     def test_emphasis_is_stripped(self):
         blocks = self.blocks("**Learn Once:** use _it_ and ==this== and ^^that^^, keep snake_case.")
@@ -545,7 +558,7 @@ class MarkdownCorpusTest(unittest.TestCase):
     """One test for each defect that real READMEs and docs pages exposed."""
 
     def blocks(self, text):
-        return dl.markdown_blocks(dedent(text))
+        return [(ln, dl.unmark(b)) for ln, b in dl.markdown_blocks(dedent(text))]
 
     def prose(self, text):
         return [dl.strip_code(b) for _, b in self.blocks(text)]

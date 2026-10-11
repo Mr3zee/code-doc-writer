@@ -30,7 +30,8 @@ comments. Read it when a rule in SKILL.md needs its source.
 - 1.11 One technical noun for one item. Never two names for one thing.
 - 1.12 Technical verbs: category 2 is computer processes. Enable, disable,
   install, load, update, debug, boot, format, and more.
-- 1.13 Don't use a technical verb as a noun.
+- 1.13 Don't use a technical verb as a noun. In code, "cache" and
+  "override" are both a verb and a noun, each with one meaning.
 - 1.14 American spelling.
 
 ## Section 2: Multi-word nouns
@@ -65,12 +66,12 @@ comments. Read it when a rule in SKILL.md needs its source.
   abstract: "No leaks are permitted" becomes "Make sure that there are no
   leaks".
 - 4.2 Don't omit words to make a sentence shorter. Keep the subject, the
-  verb, the articles, and "that". Write words in full.
-- 4.3 Use a vertical list for complex text. Colon at the end of the lead
-  sentence. Each item starts with an uppercase letter. A period only after
-  a full sentence and after the last item. This skill goes further: a list
-  or a table for any three or more parallel facts, not only for complex
-  text. The Form rules in SKILL.md give the details.
+  verb, the articles, and "that". Write words in full, except the
+  negative contractions that `words.md` lists.
+- 4.3 Use a vertical list or a table for three or more parallel facts.
+  Colon at the end of the lead sentence. Each item starts with an
+  uppercase letter or with a label in a code span. Each item ends with a
+  period, a noun phrase too. The Form rules in SKILL.md give the details.
 - 4.4 Connecting words join related sentences: and, but, then, thus, as a
   result.
 - 4.5 Use an article or "this" before a noun when English needs one. No
@@ -97,16 +98,16 @@ Descriptions. In code docs: what a declaration is or does.
 - 6.3 At most 25 words in a sentence.
 - 6.4 A paragraph starts with a topic sentence.
 - 6.5 One topic in a paragraph.
-- 6.6 At most six sentences in a paragraph. In this skill a paragraph is
-  for one fact or for a line of argument. Parallel facts go in a list or a
-  table (rule 4.3).
+- 6.6 At most six sentences in a paragraph. A paragraph is for one fact
+  or for a line of argument. Parallel facts go in a list or a table (rule
+  4.3).
 
 ## Section 7: Safety instructions
 
-Not applicable to code docs, except one idea: a warning about a harmful
-call starts with the command, then gives the risk. "Don't call this from
-the UI thread. It blocks until the file is read." This is the one
-exception to "reason first" in SKILL.md.
+One rule applies to code docs: a warning about a harmful call starts
+with the command, then gives the risk. "Don't call this from the UI
+thread. It blocks until the file is read." Every other instruction puts
+the condition or the reason first (rule 5.4).
 
 ## Section 8: Punctuation and word count
 

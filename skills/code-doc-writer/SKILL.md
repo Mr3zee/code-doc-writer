@@ -11,10 +11,10 @@ description: >-
   changelogs, docs websites, guides, Markdown, reStructuredText,
   AsciiDoc). Use it every time you write, change, or delete such a text,
   in any language, during any task. A one-line comment that is a side
-  effect of a code change counts. Also use it when someone asks to cut
-  the bullshit, simplify, shorten, clean up, remove the noise from, or
-  review docs, comments, or messages, and when someone asks for STE or
-  Simplified Technical English.
+  effect of a code change counts. Also use it when someone asks to
+  simplify, shorten, clean up, review, or remove the noise or the
+  bullshit from docs, comments, or messages. Use it when someone asks for
+  STE, Simplified Technical English, or more readable English or language.
 ---
 
 # Code doc writer
@@ -76,7 +76,8 @@ Which column a declaration gets:
 - Visibility alone doesn't decide. A public class in a module that users
   never depend on has private docs.
 - Check the module's purpose before you decide.
-- Use `@see` for related API, not for a fact the caller must know.
+- Use `@see` for related API or a docs page, not for a fact the caller
+  must know.
 
 ## Procedure
 
@@ -97,10 +98,11 @@ Which column a declaration gets:
    write it. When you can't check a claim that comes from the original
    text, keep its wording.
 8. Run `scripts/doc_lint.py` on the file. The lint is a complement to
-   steps 4 to 7, never a replacement for them: it finds punctuation and
-   listed words, and nothing else. Fix every hard failure. Read each soft
-   warning and fix it or leave it with a reason. [Lint](#lint) tells what
-   the lint reads and what it can't see.
+   steps 4 to 7, never a replacement for them. It finds punctuation,
+   listed words, long sentences, and three grammar patterns, and nothing
+   else. Fix every hard failure. Read each soft warning and fix it or
+   leave it with a reason. [Lint](#lint) tells what the lint reads and
+   what it can't see.
 9. In a rewrite, compare the result with the original. The result has
    every kept fact and invents none. A qualifier such as "some", "only",
    or "when X" is a fact.
@@ -206,8 +208,8 @@ Sentences:
 
 - Aim for at most 20 words in an instruction and 25 in a description. A
   code span, a link, a number, a placeholder, or a parenthesis counts as one
-  word. When a split makes the sentence harder to read, or removes a
-  fact, keep the long sentence.
+  word. The lint counts the same way. When a split makes the sentence
+  harder to read, or removes a fact, keep the long sentence.
 - One topic in each sentence. One instruction in each sentence. A cause and
   its effect are one topic: keep them in one sentence with "because" or
   "so". Two facts that only stand next to each other get two sentences.
@@ -279,8 +281,8 @@ Words:
   table when [Form](#language-rules) says so: modes, options, steps,
   conditions.
 - A code example when it shows the reader how to use the declaration
-  faster than words do. Keep it short. No comments inside the example. For
-  more examples, link to the website.
+  faster than words do. The example is short and has no comments inside
+  it. For more examples, link to the website.
 - Tags, in this order:
   - `@param` only when the name and the type don't say it. A public
     `@param` gets one short sentence even when the doc of the type gives
@@ -321,7 +323,10 @@ Rules for messages:
 
 - Search the file for string literals that a person reads.
 - In a message every sentence, the problem included, gets the 20-word
-  limit of an instruction. Lint the messages with `--max-words 20`.
+  limit of an instruction. Lint the messages with `--max-words 20`. A
+  message in a `.json` file lints in place. The lint skips string
+  literals in source code, so put those messages in a temporary `.md`
+  file.
 - The line length limit of the code doesn't apply to a message in a data
   file.
 - At most three sentences for the problem and the fix. A fixed closing
@@ -346,7 +351,7 @@ the file and try again!
 After:
 
 ```
-`{0}` has a key that this version of the tool doesn't know. Remove the
+`{0}` has a key that this version of the tool doesn't accept. Remove the
 key, or update the tool.
 ```
 
@@ -440,7 +445,9 @@ docstrings, messages, and a README table.
 ## Lint
 
 The lint is a complement to the rules, never the primary check. It finds
-punctuation and the words in `references/words.md`, and nothing else.
+punctuation, the words in `references/words.md`, a sentence over the
+limit, a likely passive, an "-ing" clause, and an uncontracted negative.
+Nothing else.
 
 What the lint can't see:
 
@@ -477,9 +484,9 @@ What the lint reads in each kind of file:
 
 | File | Reads | Skips |
 |---|---|---|
-| Source | The `/* */`, `//`, and `#` comments and the triple-quoted strings. | String literals, so a message in source code in place. |
+| Source | The `/* */`, `//`, and `#` comments and the triple-quoted strings. | String literals. A message in source code goes in a temporary `.md` file for the lint. |
 | `.json` | Every string value that has a space in it. | Identifiers, paths, and URLs. |
-| `.md` | Every paragraph, heading, list item, table row, front matter value, and link text. Every finding is a soft warning, because the lint can't tell prose from markup it doesn't know. | Code blocks, HTML tags, HTML comments, images, template calls, and link reference definitions. |
+| `.md`, `.markdown`, `.mdx` | Every paragraph, heading, list item, table row, front matter value, and link text. A link counts as one word. Every finding is a soft warning, because the lint can't tell prose from markup it doesn't know. | Code blocks, HTML tags, HTML comments, images, template calls, and link reference definitions. |
 
 The lint can't lint one message, one string, or a text in another doc
 format. Put the text in a temporary `.md` file and lint that file.
@@ -494,7 +501,7 @@ format. Put the text in a temporary `.md` file and lint that file.
 - No fact appears twice in the file.
 - No idiom, no filler, no Latin abbreviation, no semicolon, no dash aside.
 - Three or more parallel facts are a list or a table, not a paragraph.
-- In a rewrite task, the code didn't change. Diff the file and look at
-  the non-comment lines.
+- In a rewrite task, the code didn't change. Diff the file: each changed
+  line is a comment or a message string.
 - The lint reports no hard failure, and each soft warning has an answer.
   A clean lint doesn't show that the items above hold. Reading does.
