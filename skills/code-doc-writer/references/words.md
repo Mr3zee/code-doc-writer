@@ -3,41 +3,40 @@
 The STE dictionary approves about 900 words and rejects about 1300 with
 alternatives. This table is the part that matters for code docs, adapted
 for programming. The adaptation: exact terms of computer science stay, even
-when STE rejects them. STE itself permits this through its technical noun
+when STE rejects them. STE itself has this exception in its technical noun
 and technical verb categories (rules 1.5 and 1.12, category "computer
-processes and applications").
+processes").
 
 ## Plain verbs to prefer
 
 | Use | Instead of |
 |---|---|
-| do | perform, carry out, execute (a task), conduct |
-| get | obtain, retrieve, acquire, fetch, receive (a value) |
+| do | perform, carry out, conduct |
+| get | obtain, retrieve, acquire, receive (a value) |
 | give | provide, supply, furnish, offer |
 | make | create (an object), construct, build (an object), produce |
 | use | utilize, employ, leverage, make use of |
-| set | assign, configure (a value), specify (a value) |
+| set | assign, specify (a value) |
 | show | indicate, display, represent, denote, signify, reflect |
 | find | determine, locate, discover, look up, detect |
-| let | allow, permit, enable (when it means permit) |
+| let | allow, permit |
 | need | require (when it means need) |
 | keep | retain, preserve, maintain, hold on to |
 | put | place, insert, position |
 | start | begin, commence, initiate, launch |
 | stop | end, terminate, cease, halt |
-| send | transmit, dispatch, emit (a message) |
-| read, write | load (a file), save (a file), persist |
-| check | verify, validate (when it means check), ensure, make certain |
+| send | transmit |
+| read, write | save (a file), persist |
+| check | verify, ensure, make certain |
 | add, remove | append (unless order matters), delete, drop, strip |
 | change | modify, alter, adjust, update (unless the term is "update") |
 | call | invoke |
 | run | execute (a program or task) |
-| fail | throw (when the caller does not catch a type), error out, blow up |
+| fail | error out, blow up |
 | cause | trigger (when it means cause), result in, lead to |
 | help | facilitate, assist, aid |
 | have | comprise, consist of, contain (when it means have), include |
 | think, expect | assume, consider |
-| see | refer to, consult, look at |
 | tell | inform, notify (unless the term is "notify") |
 
 ## Computer science terms that stay
@@ -45,23 +44,27 @@ processes and applications").
 These are technical verbs and nouns. They are exact. A plain verb would
 lose meaning. Use each with its one meaning.
 
-- Verbs: compile, parse, resolve, register, configure, enable, disable,
-  install, load, publish, deploy, serialize, deserialize, encode, decode,
-  encrypt, cache, index, sort, filter, map, reduce, merge, split, validate,
-  handle (an event or exception), throw, catch, return, yield, await, lock,
-  unlock, commit, roll back, fetch (git), push, pull, clone, mount, bind,
-  override, inherit, implement, instantiate, allocate, free, dispose, close,
-  mutate, enable, disable, validate, whether (before a Boolean: "Whether
-  the check runs"),
-  open, flush, poll, subscribe, emit (an event), dispatch (an event), report
-  (a diagnostic), suppress (a diagnostic), inline, link, relocate, shade.
+- Verbs: compile, parse, resolve, register, configure (an object, not a
+  value), enable and disable (a feature, not a permission), install, load
+  (into memory), publish, deploy, serialize, deserialize, encode, decode,
+  encrypt, cache, index, sort, filter, map, reduce, merge, split, validate
+  (against a schema), handle (an event or exception), throw (an exception
+  that the caller catches), catch, return, yield, await, lock, unlock,
+  commit, roll back, fetch (git), push, pull, clone, mount, bind, override,
+  inherit, implement, instantiate, allocate, free, dispose, close, mutate,
+  open, flush, poll, subscribe, emit (an event), dispatch (an event),
+  report (a diagnostic), suppress (a diagnostic), inline, link, relocate,
+  shade.
+- Whether: before a Boolean property or function. "Whether the check
+  runs."
 - Nouns: API, build, cache, callback, classpath, compilation, dependency,
   default, diagnostic, exception, fallback, handler, hook, invariant,
   listener, module, option, override, parser, plugin, property, provider,
   registry, runtime, scope, session, severity, target, task, token, type,
   variant, visibility, warning, error.
 
-Use "default" as a noun or adjective. "Defaults to X" is fine as a term.
+Use "default" as a noun or adjective. The verb form "defaults to X" is an
+accepted term.
 Use "fallback" as a noun. For the verb, say "uses X when Y fails".
 
 ## Words to delete
@@ -77,7 +80,8 @@ Filler adds no fact. Delete it and read the sentence again.
 - currently, at the moment, for now (version control has the time)
 - keep in mind, bear in mind, make sure to (write the instruction)
 - in order to (use "to"), so as to (use "to")
-- a.k.a., aka, cf., e.g., i.e., etc., vs., viz.
+- cf., e.g., i.e., etc., viz. ("cf." becomes "compare", "vs." becomes
+  "or", "a.k.a." and "aka" become "also")
 
 ## Words with a plainer swap
 
@@ -115,12 +119,12 @@ Filler adds no fact. Delete it and read the sentence again.
 ## Contractions
 
 STE writes every word in full. This skill differs: use the common negative
-contractions can't, don't, doesn't, isn't, won't. Never "cannot". Other
-contractions (it's, you're, we've) stay out.
+contractions can't, don't, doesn't, isn't, won't, didn't, aren't, wasn't.
+Never "cannot". Don't use other contractions (it's, you're, we've).
 
 ## Modal verbs
 
 - "can" for possibility and permission.
 - "must" for a requirement on the reader.
 - "will" only for a real future event. Behavior is in the present tense.
-- "may", "might", "could", "should", "would" do not appear.
+- "may", "might", "could", "should", "would" don't appear.

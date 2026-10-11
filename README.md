@@ -12,13 +12,6 @@ The skill reads that file first. Its rules win over the skill.
 
 ## Install
 
-Use the agent's marketplace where it has one. The scripts in `docs/` are
-the fallback for an agent without a marketplace, or for a machine without
-the agent's CLI. GitHub Pages serves them from
-<https://mr3zee.github.io/code-doc-writer/>. Each script installs for the
-current user. Add `-s -- --project` after `sh` to install into the current
-project instead.
-
 ### Claude Code
 
 ```
@@ -32,6 +25,9 @@ Or:
 curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh
 ```
 
+The script saves the skill into `~/.claude/skills/`. With `sh -s -- --project` it saves
+into `.claude/skills/` of the current directory instead.
+
 ### Codex
 
 ```
@@ -44,6 +40,9 @@ Or:
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh
 ```
+
+The script saves the skill into `~/.agents/skills/`. With `sh -s -- --project` it saves
+into `.agents/skills/` of the current directory instead.
 
 ### pi
 
@@ -59,11 +58,17 @@ Or:
 curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh
 ```
 
+The script saves the skill into `~/.agents/skills/`. With `sh -s -- --project` it saves
+into `.agents/skills/` of the current directory instead.
+
 ### Junie
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh
 ```
+
+The script saves the skill into `~/.junie/skills/`. With `sh -s -- --project` it saves
+into `.junie/skills/` of the current directory instead.
 
 ## Publish
 

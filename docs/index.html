@@ -10,10 +10,12 @@
   a { color: #8ab4f8; }
   h1, h2 { color: #ffffff; }
   h2 { margin-top: 2rem; }
+  h3 { margin-top: 1.5rem; }
   pre { background: #1e1e1e; border: 1px solid #333; padding: .75rem; overflow-x: auto; }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .95em; background: #1e1e1e; color: #f0f0f0; padding: .1em .3em; border-radius: 3px; }
   pre code { background: none; padding: 0; }
-  pre { position: relative; }
+  .block { position: relative; }
+  .block pre { padding-right: 2.6rem; }
   .copy { position: absolute; top: .4rem; right: .4rem; width: 1.6rem; height: 1.6rem; padding: .2rem; border: 1px solid #444; border-radius: 4px; background: #2a2a2a; color: #ccc; cursor: pointer; }
   .copy:hover { background: #3a3a3a; color: #fff; }
   .copy svg { width: 100%; height: 100%; display: block; }
@@ -22,37 +24,46 @@
 </head>
 <body>
 <h1>code-doc-writer</h1>
-<p>A skill for coding agents. It writes and rewrites code comments and user-facing messages in short plain technical English, based on ASD-STE100 adapted for programming.</p>
+<p>A skill for coding agents. It writes and rewrites doc comments, inline code comments, and user-facing messages in short plain technical English. The language rules come from ASD-STE100 (Simplified Technical English), adapted for programming.</p>
 <p>Source: <a href="https://github.com/Mr3zee/code-doc-writer">github.com/Mr3zee/code-doc-writer</a></p>
 
-<p>Use the agent's marketplace where it has one. The scripts are the fallback. Each one copies the skill folder into the agent's skills directory and nothing else.</p>
-<p>Each script installs for the current user. To install into the current project, run it from the project root with the project flag:</p>
-<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project</code></pre>
+<h2>Project rules</h2>
+<p>A repository can add its own rules in <code>DOCS_GUIDELINE.md</code> at its root. The skill reads that file first. Its rules win over the skill.</p>
 
-<h2>Claude Code</h2>
+<h2>Install</h2>
+
+<h3>Claude Code</h3>
 <pre><code>claude plugin marketplace add Mr3zee/code-doc-writer
 claude plugin install code-doc-writer@code-doc-writer</code></pre>
-<p>Fallback:</p>
+<p>Or:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh</code></pre>
+<p>The script saves the skill into <code>~/.claude/skills/</code>. With <code>sh -s -- --project</code> it saves into <code>.claude/skills/</code> of the current directory instead.</p>
 
-<h2>Codex</h2>
+<h3>Codex</h3>
 <pre><code>codex plugin marketplace add Mr3zee/code-doc-writer
 codex plugin add code-doc-writer@code-doc-writer</code></pre>
-<p>Fallback:</p>
+<p>Or:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh</code></pre>
+<p>The script saves the skill into <code>~/.agents/skills/</code>. With <code>sh -s -- --project</code> it saves into <code>.agents/skills/</code> of the current directory instead.</p>
 
-<h2>pi</h2>
+<h3>pi</h3>
+<p>Add <code>-l</code> for the current project only:</p>
 <pre><code>pi install git:github.com/Mr3zee/code-doc-writer</code></pre>
-<p>Fallback:</p>
+<p>Or:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh</code></pre>
+<p>The script saves the skill into <code>~/.agents/skills/</code>. With <code>sh -s -- --project</code> it saves into <code>.agents/skills/</code> of the current directory instead.</p>
 
-<h2>Junie</h2>
-<p>Junie has no marketplace yet. Use the script, then check it with <code>/skills</code> in Junie.</p>
+<h3>Junie</h3>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh</code></pre>
+<p>The script saves the skill into <code>~/.junie/skills/</code>. With <code>sh -s -- --project</code> it saves into <code>.junie/skills/</code> of the current directory instead.</p>
 <script>
   var icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
   var check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>';
   document.querySelectorAll('pre').forEach(function (pre) {
+    var block = document.createElement('div');
+    block.className = 'block';
+    pre.parentNode.insertBefore(block, pre);
+    block.appendChild(pre);
     var button = document.createElement('button');
     button.className = 'copy';
     button.title = 'Copy';
@@ -65,7 +76,7 @@ codex plugin add code-doc-writer@code-doc-writer</code></pre>
         setTimeout(function () { button.innerHTML = icon; button.classList.remove('done'); }, 1500);
       });
     });
-    pre.appendChild(button);
+    block.appendChild(button);
   });
 </script>
 </body>

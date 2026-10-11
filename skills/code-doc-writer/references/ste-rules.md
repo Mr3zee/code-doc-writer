@@ -8,18 +8,20 @@ comments. Read it when a rule in SKILL.md needs its source.
 
 - 1.1 Use approved words, technical nouns, and technical verbs. In code
   docs the technical nouns are identifiers, tool names, formats, and domain
-  terms. The technical verbs are the domain's own verbs. See `words.md`.
+  terms. The technical verbs are the domain's own verbs. `words.md` has
+  the table.
 - 1.2 Use a word only as its approved part of speech. "Test" is a noun.
-  "Do a test", not "test the system". In code, follow the domain: "run the
-  tests" is a term.
+  "Do a test", not "test the system". In code, use the domain's term: "run
+  the tests".
 - 1.3 Use a word only with its approved meaning. This is the rule against
-  idioms and metaphors. "Follow" means "come after". It does not mean "obey".
+  idioms and metaphors. "Follow" means "come after". It doesn't mean
+  "obey".
 - 1.4 Use only the approved forms of verbs and adjectives.
 - 1.5 Technical nouns: a word is a technical noun when it belongs to a
   subject field. STE lists 22 categories. Category 19 is computer science.
 - 1.6 Use an unapproved word only when it is a technical noun. "Backup" is
   rejected as a word but accepted as a computer term.
-- 1.7 Do not use a technical noun as a verb. "Apply oil", not "oil the
+- 1.7 Don't use a technical noun as a verb. "Apply oil", not "oil the
   part". In code, "cache the result" is an accepted technical verb.
 - 1.8 Use the technical nouns of your field. Use the name the code uses.
 - 1.9 When you pick a technical noun, pick a short one.
@@ -28,15 +30,15 @@ comments. Read it when a rule in SKILL.md needs its source.
 - 1.11 One technical noun for one item. Never two names for one thing.
 - 1.12 Technical verbs: category 2 is computer processes. Enable, disable,
   install, load, update, debug, boot, format, and more.
-- 1.13 Do not use a technical verb as a noun.
+- 1.13 Don't use a technical verb as a noun.
 - 1.14 American spelling.
 
 ## Section 2: Multi-word nouns
 
 - 2.1 At most three words in a noun group. "Runway light connection
   resistance calibration" becomes "calibration of the resistance of the
-  runway light connection". In code: "the diagnostic severity option",
-  not "the compiler plugin diagnostic severity command line option".
+  runway light connection". In code: "the request timeout option", not
+  "the HTTP client request timeout command line option".
 - 2.2 Write a long technical noun in full the first time. Then use its
   short form or abbreviation. Hyphens join words that are one unit.
 
@@ -50,7 +52,7 @@ comments. Read it when a rule in SKILL.md needs its source.
 - 3.4 No auxiliary verbs for complex constructions. "The value can be
   changed" becomes "You can change the value".
 - 3.5 "-ing" only in a technical noun or as its modifier. "Caching",
-  "logging", "the parsing step" are fine. "When parsing" is not.
+  "logging", "the parsing step" are fine. "When parsing" isn't.
 - 3.6 Active voice. In descriptions the passive is allowed only when the
   actor is unknown. Four methods to fix a passive: name the actor, change
   the verb, use the imperative, use "you" or "we".
@@ -62,7 +64,7 @@ comments. Read it when a rule in SKILL.md needs its source.
 - 4.1 Short and clear. One topic in each descriptive sentence. Not
   abstract: "No leaks are permitted" becomes "Make sure that there are no
   leaks".
-- 4.2 Do not omit words to make a sentence shorter. Keep the subject, the
+- 4.2 Don't omit words to make a sentence shorter. Keep the subject, the
   verb, the articles, and "that". Write words in full.
 - 4.3 Use a vertical list for complex text. Colon at the end of the lead
   sentence. Each item starts with an uppercase letter. A period only after
@@ -89,7 +91,7 @@ tells the caller what to do.
 Descriptions. In code docs: what a declaration is or does.
 
 - 6.1 Give information step by step. One subject in each sentence.
-- 6.2 Repeat key words to connect sentences. Do not vary the term.
+- 6.2 Repeat key words to connect sentences. Don't vary the term.
 - 6.3 At most 25 words in a sentence.
 - 6.4 A paragraph starts with a topic sentence.
 - 6.5 One topic in a paragraph.
@@ -97,9 +99,10 @@ Descriptions. In code docs: what a declaration is or does.
 
 ## Section 7: Safety instructions
 
-Not applicable to code docs, except one idea: a warning starts with the
-command, then gives the risk. "Do not call this from the UI thread. It
-blocks until the file is read."
+Not applicable to code docs, except one idea: a warning about a harmful
+call starts with the command, then gives the risk. "Don't call this from
+the UI thread. It blocks until the file is read." This is the one
+exception to "reason first" in SKILL.md.
 
 ## Section 8: Punctuation and word count
 
@@ -113,9 +116,9 @@ blocks until the file is read."
 
 ## Section 9: Writing practices
 
-- 9.1 When a word-for-word swap does not work, write a new sentence.
-- 9.2 Use each approved word correctly. "See" is for eyes. "Make sure" is
-  for a check.
+- 9.1 When a word-for-word swap doesn't work, write a new sentence.
+- 9.2 Use each approved word correctly. "See" is for eyes and for a
+  reference to a document. "Make sure" is for a check.
 - 9.3 No phrasal verbs. "Extinguish", not "put out". In code: "start", not
   "kick off". "Remove", not "strip out". "Send", not "hand off".
 - 9.4 Consistent style. The same wording for the same kind of fact,
@@ -126,4 +129,4 @@ blocks until the file is read."
 - GR-4 "This" must point to one thing.
 - GR-6 No Latin abbreviations.
 - GR-7 Gender-neutral language.
-- GR-8 Use the possessive form only when it is clearly correct.
+- GR-8 Use the possessive form only when no other reading exists.

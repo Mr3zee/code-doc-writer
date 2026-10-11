@@ -1,7 +1,8 @@
 # Examples
 
-Each pair shows a comment before and after the rewrite. The syntax is
-generic. The rules are the same for KDoc, Javadoc, docstrings, and `//`.
+Each pair shows a comment before and after the rewrite. The examples use
+Kotlin syntax. The rules are the same for every language and comment
+syntax.
 
 ## Public doc that explains the implementation
 
@@ -29,8 +30,7 @@ After:
 ```
 /**
  * Adds an exemption annotation to every declaration with a recorded
- * diagnostic. Use it once, when you adopt the checks on a published
- * library.
+ * diagnostic. Use it when you adopt the checks on a published library.
  */
 ```
 
@@ -54,8 +54,8 @@ After:
 
 ```
 /**
- * Exempts a published DSL marker whose `@Target` can't change. A change
- * breaks users.
+ * Exempts a published DSL marker whose `@Target` is wrong (no-op targets,
+ * or no `@Target`) and can't change.
  */
 ```
 
@@ -119,7 +119,7 @@ class LineEndingMapping
 Why: the method names say what they do. The two facts that the code can't
 show are the two constraints from outside.
 
-## Inline comment with history and feelings
+## Inline comment that repeats what the code shows
 
 Before:
 
@@ -133,7 +133,7 @@ After:
 
 ```
 // Not a `when`: it compiles to an `ordinal()` call that the compatibility
-// checker rejects.
+// checker rejects against the compiler API baseline.
 ```
 
 ## Inline comment that narrates the code
@@ -165,7 +165,8 @@ After:
 
 ```
 def resolve(self, name):
-    """Returns the binding for `name` from this scope or the nearest parent."""
+    """Returns the binding for `name` from this scope or the nearest parent
+    scope that has it. Returns `None` when no scope has it."""
 ```
 
 ## Constraint that must stay
@@ -182,12 +183,12 @@ Before:
 After:
 
 ```
-// Do not read `abiValidation`. Its getter activates ABI validation in
+// Don't read `abiValidation`. Its getter activates ABI validation in
 // Kotlin 2.4 and later. The registered tasks show the activation instead.
 ```
 
-Why: this is an external constraint with a version. It stays, in the
-imperative, with the reason in its own sentence.
+Why: this is an external constraint with a version. It stays as a warning
+about a harmful call: the command first, then the risk.
 
 ## Repeated boilerplate across declarations
 
@@ -206,13 +207,14 @@ After, on each:
 
 ```
  * @param reason why the shape stays.
- * @param description the constraint. Empty only when [reason] says it all.
- * @see <https://example.org/checks/x>
+ * @param description the constraint. Empty only when [reason] gives the
+ *   whole constraint.
+ * @see [Check x](https://example.org/checks/x)
 ```
 
-The `@param` text stays on each annotation, because a public reader lands
-on any one of them. It gets one short sentence each. The long version of
-the rule lives once, on the shared `reason` enum.
+The `@param` text stays on each annotation, because a public reader reads
+any one of them. It gets one short sentence each. The long version of the
+rule is on the shared `reason` enum.
 
 ## Message
 
@@ -232,7 +234,8 @@ After:
 class can subclass it. Pass at least one opt-in marker class.
 ```
 
-Why: problem, then fix. The reason for the marker is on the linked page.
+Why: problem, then fix. The reason for the marker belongs on the check's
+page, not in the message.
 
 ## Log line
 
@@ -245,5 +248,5 @@ log.info("Successfully finished processing all of the $count report files that w
 After:
 
 ```
-log.info("Collected $count reports. Starting the fixer.")
+log.info("Collected $count reports.")
 ```

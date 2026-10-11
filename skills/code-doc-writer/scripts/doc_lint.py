@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """Lint the comments and doc comments of source files.
 
-Reports semicolons and dash asides as hard failures. Reports long sentences, filler words, words with simpler
-alternatives, semicolons, dashes, Latin abbreviations, and likely
-passive voice. Works on any language that uses /* */, //, # or
-triple-quoted docstrings.
+Hard failures (exit code 1): a semicolon, an em dash, an en dash, ` -- `,
+or a ` - ` aside. Soft warnings: a long sentence, a filler word, a word
+with a plainer swap, a Latin abbreviation, a figurative word, a likely
+passive, an "-ing" clause, and an uncontracted negative. Works on any
+language that uses /* */, //, # or triple-quoted strings.
 
 Usage:
     doc_lint.py [--json] [--max-words N] FILE...
-A .json file is read as data: every string value is linted as prose.
+The lint reads a .json file as data and lints every string value that
+has a space in it, so identifiers, paths, and URLs pass. A .json file has
+a limit of 20 words, or less with --max-words.
 Exit code 1 when a hard rule fails.
 """
 import json
@@ -17,10 +20,9 @@ import sys
 
 MAX_WORDS = 25
 
-# word or phrase -> replacement or "" (delete)
 # word or phrase -> replacement or "" (delete). STE alternatives, adapted for
 # programming: exact computer-science verbs (enable, configure, handle, check,
-# register, resolve, return, throw, support) are not listed because they stay.
+# register, resolve, return, throw, support) aren't listed because they stay.
 SWAPS = {
     "utilize": "use", "utilise": "use", "leverage": "use", "employ": "use",
     "perform": "do", "carry out": "do", "execute": "run", "invoke": "call",
@@ -74,6 +76,8 @@ SWAPS = {
 HARD_PATTERNS = [
     ("semicolon", re.compile(r";")),
     ("em-dash", re.compile(r"[—–]| -- ")),
+    # A hyphen with a space on each side, inside a sentence, is a dash aside. A list item starts its line with a hyphen.
+    ("dash-aside", re.compile(r"(?<=[\w,.)]) - (?=\w)")),
 ]
 
 # Words that are usually figurative in code docs. Literal use is fine.
@@ -122,7 +126,7 @@ SENT_SPLIT = re.compile(r"(?<=[.!?:])\s+(?=[A-Z0-9`\[(\"'])")
 
 
 def extract_comments(text):
-    """Yield (line_number, comment_text) for every comment block."""
+    """Return (line_number, comment_text) pairs, one for each comment block."""
     i, n, line = 0, len(text), 1
     out = []
     while i < n:
@@ -182,7 +186,7 @@ def extract_comments(text):
 
 
 def json_strings(text):
-    """Yield (line, prose) for every string value of a JSON document. Lists of strings join."""
+    """Return (line, prose) pairs for the string values of a JSON document. A list of strings is one pair."""
     data = json.loads(text)
     out = []
 
@@ -190,18 +194,25 @@ def json_strings(text):
         i = text.find(snippet[:40].replace("\\", "\\\\").replace('"', '\\"'))
         return text[:i].count("\n") + 1 if i >= 0 else 1
 
+    def is_prose(text):
+        # An identifier, a path, or a URL has no space. Prose has spaces.
+        return " " in text.strip()
+
     def walk(v):
         if isinstance(v, str):
-            out.append((line_of(v), v))
+            if is_prose(v):
+                out.append((line_of(v), v))
         elif isinstance(v, list):
             if v and all(isinstance(x, str) for x in v):
-                out.append((line_of(v[0]), " ".join(v)))
+                joined = " ".join(v)
+                if is_prose(joined):
+                    out.append((line_of(v[0]), joined))
             else:
                 for x in v:
                     walk(x)
         elif isinstance(v, dict):
             for k, x in v.items():
-                if k.startswith("$") or k in ("name", "docs", "id", "url", "docsBaseUrl"):
+                if k == "$schema":
                     continue
                 walk(x)
     walk(data)
@@ -212,7 +223,7 @@ def strip_code(comment):
     """Drop fenced code and shorten code spans so they count as one word."""
     comment = re.sub(r"```.*?```", " ", comment, flags=re.S)
     comment = re.sub(r"^\s{4,}\S.*$", " ", comment, flags=re.M)  # indented code
-    comment = re.sub(r"^\s*@\w+\s+\S+", " ", comment, flags=re.M)  # tags keep their text
+    comment = re.sub(r"^\s*@\w+\s+\S+", " ", comment, flags=re.M)  # drop the tag and its first word, keep the rest
     comment = re.sub(r"\{\d+\}", " PARAM ", comment)
     return CODE_SPAN.sub(" CODE ", comment)
 
