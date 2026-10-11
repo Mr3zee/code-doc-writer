@@ -2,8 +2,8 @@
 name: code-doc-writer
 description: >-
   Write or rewrite every text a person reads in code or in documentation,
-  in short plain technical English based on ASD-STE100. The texts are
-  doc comments (KDoc, Javadoc, JSDoc, Doxygen, docstrings, XML docs,
+  in short plain technical English based on ASD-STE100. Use lists and
+  tables where the facts have a structure. The texts are doc comments (KDoc, Javadoc, JSDoc, Doxygen, docstrings, XML docs,
   rustdoc, Go doc comments), inline comments, TODO and FIXME notes,
   user-facing messages (diagnostics, errors, exceptions, assertions,
   warnings, deprecation notices, log lines, CLI output, help text,
@@ -20,10 +20,16 @@ description: >-
 # Code doc writer
 
 Write comments, messages, and documentation so a reader gets the facts
-fast. The language rules come from ASD-STE100 (Simplified Technical
-English), adapted for programming. The scope rules come from one idea: a
-comment is only for what the code can't show. The text that gives the
-facts in the fewest sentences is the best text.
+fast. Three kinds of rules:
+
+- Language rules: ASD-STE100 (Simplified Technical English), adapted for
+  programming.
+- Scope rules: a comment is only for what the code can't show.
+- Form rules: structured text where the facts have a structure. Sentences
+  and paragraphs where they don't.
+
+The measure: the text that gives the facts in the fewest words, in the
+form that the reader scans fastest, is the best text.
 
 ## Scope
 
@@ -40,8 +46,8 @@ facts in the fewest sentences is the best text.
   line in YAML, a comment block in a template.
 - Any documentation: README files, changelogs, docs websites, guides,
   Markdown, reStructuredText, AsciiDoc, or any other doc format. The
-  language rules apply as they are. For the scope rules, the doc is the
-  reader's one place.
+  language and form rules apply as they are. For the scope rules, the doc
+  is the reader's one place.
 - The skill applies to the text, not the code. When you write code, the
   skill applies to the comments and messages you write with it. Keep the
   comment syntax of the language.
@@ -58,22 +64,19 @@ facts in the fewest sentences is the best text.
 | | Public API docs | Private docs |
 |---|---|---|
 | Reader | A user of the library. Knows the domain, but doesn't read the source. | A developer of this codebase. Knows the domain and the modules. |
+| Has | One place at a time: the website, the README, the doc comment in the IDE, or one overload of a function. | The source and the public docs. |
 | Tell | What it does. When to use it. How to call it. What the caller must know. | Only what the code can't show. |
+| Repeat | Every fact the reader needs in this place, even when the website, the README, or another overload also states it. | A public fact only to add to it. |
 | Never | Implementation, internal types, other modules, build tooling, history, design arguments. | What the code already shows. What the public docs already say. History. |
 
-A declaration is public API when a user of the published artifact can see
-it. Visibility alone doesn't decide. A public class in a module that users
-never depend on has private docs. Check the module's purpose before you
-decide.
+Which column a declaration gets:
 
-A public reader learns from one place: the website, the README, the doc
-comment in the IDE, or one overload of a function. Each place states
-every fact the reader needs there, even when the website, the README, or
-another overload also states it. Use `@see` for related API, not for a
-fact the caller must know.
-
-A private reader has the source and the public docs. A private doc repeats
-a public fact only to add to it.
+- Public API when a user of the published artifact can see the
+  declaration.
+- Visibility alone doesn't decide. A public class in a module that users
+  never depend on has private docs.
+- Check the module's purpose before you decide.
+- Use `@see` for related API, not for a fact the caller must know.
 
 ## Procedure
 
@@ -86,7 +89,8 @@ a public fact only to add to it.
    rewrite, the draft is the existing text, split into sentences.
 4. Apply the keep test to each sentence. Delete or keep.
 5. Write each kept sentence with the language rules.
-6. Put the sentences in the order that [Shape of a doc
+6. Give the kept sentences their form: a list or a table when
+   [Form](#language-rules) says so, in the order that [Shape of a doc
    comment](#shape-of-a-doc-comment) gives.
 7. Check each claim about the code against the code or the project's
    docs. Fix a wrong claim. Find the fact behind an ambiguous sentence and
@@ -113,9 +117,11 @@ a public fact only to add to it.
     - A fact that now appears twice.
     - A comment that no longer matches the code below it.
 
-The style of the request doesn't change the style of the text. A casual
-or blunt request still gets a plain technical comment. When you report
-your work to the person, use the same language rules.
+Two rules on style:
+
+- The style of the request doesn't change the style of the text. A casual
+  or blunt request still gets a plain technical comment.
+- Your report to the person follows the same language and form rules.
 
 ## Keep test
 
@@ -151,25 +157,50 @@ Keep a sentence when one of these is true:
 - It gives the one invariant that the code relies on and doesn't check.
 - It tells why the code doesn't do the obvious thing.
 
-When a delete rule and a keep rule both match a sentence, the keep rule
-overrides the delete rule.
+After the test:
 
-Add a fact that the draft lacks only when the code proves it and a caller
-needs it. Such a fact is what happens on misuse, the error or diagnostic
-that the code reports, or the exception it throws.
-
-State a default that is the same for a group of declarations once, on the
-group or the class, not on each member.
-
-When the keep test deletes every sentence, delete the whole comment. When
-the project requires a doc comment on every public declaration, keep one
-sentence. That sentence must still help: it says what the declaration is
-for, not its name again.
+- When a delete rule and a keep rule both match a sentence, the keep rule
+  wins.
+- Add a fact that the draft lacks only when the code proves it and a
+  caller needs it. Such a fact is what happens on misuse, the error or
+  diagnostic that the code reports, or the exception it throws.
+- State a default that is the same for a group of declarations once, on
+  the group or the class, not on each member.
+- When the test deletes every sentence, delete the whole comment.
+- When the project requires a doc comment on every public declaration,
+  keep one sentence. It says what the declaration is for, not its name
+  again.
 
 ## Language rules
 
 `references/ste-rules.md` gives the ASD-STE100 source of the rules that
 come from the standard.
+
+Form:
+
+- Prefer structured text to sentences and paragraphs. A paragraph is for
+  one fact, or for a line of argument where each sentence follows from
+  the one before.
+- A vertical list for three or more parallel items: steps, options,
+  conditions, parts, rules. Two items can stay in one sentence.
+- A table when three or more items have the same two or more attributes:
+  option and default, mode and effect, reader and rule.
+- A numbered list when the order matters. A bulleted list when it
+  doesn't.
+- A lead-in sentence names what the list holds and ends with a colon.
+- One item holds one fact, in a noun phrase or in one to three sentences.
+  All items of a list have the same grammar: all noun phrases, all
+  sentences, or all commands.
+- Put the label first in an item that has one: "`fast`: syntax checks
+  only." Don't repeat the lead-in words in each item.
+- Nest a list one level at most. Put more structure in a table or a
+  section.
+- Use the list and table syntax that the doc tool renders: Markdown in
+  KDoc, JSDoc, rustdoc, and Markdown docs, HTML in Javadoc, the
+  markup of the docstring tool in Python. When no tool renders the
+  comment, write one item on each line with a hyphen.
+- A message, a log line, and a one-fact inline comment stay in
+  sentences.
 
 Sentences:
 
@@ -197,7 +228,6 @@ Sentences:
   (STE 8.3).
 - No "-ing" clauses. "When you add a check", not "when adding a check".
   "A change breaks users", not "without breaking users".
-- Three or more items with structure go in a vertical list.
 - A paragraph has at most six sentences and one topic.
 
 Words:
@@ -245,7 +275,9 @@ Words:
   "Writes". A type or property starts with a noun phrase: "The timeout of
   each request." When the name gives every fact, write no comment. Never
   start with "Also".
-- Then the facts from the keep test, one sentence each.
+- Then the facts from the keep test. One sentence each, or a list or a
+  table when [Form](#language-rules) says so: modes, options, steps,
+  conditions.
 - A code example when it shows the reader how to use the declaration
   faster than words do. Keep it short. No comments inside the example. For
   more examples, link to the website.
@@ -272,6 +304,8 @@ Words:
   This includes a comment that names the algorithm: "binary search",
   "lower bound", "iterate over the handlers".
 - Put the comment where the decision is.
+- Three or more parallel facts, such as the cases of a branch, go in a
+  list with one item on each line.
 
 ## Messages
 
@@ -365,6 +399,31 @@ After:
 // regenerates the index.
 ```
 
+Before (parallel facts in a paragraph):
+
+```
+/**
+ * Runs the checks. The `fast` mode runs only the syntax checks and takes
+ * about a second. The `full` mode also runs the type checks and takes
+ * about a minute. The `ci` mode is `full` plus the lint, and it fails on
+ * a warning.
+ */
+fun check(mode: Mode)
+```
+
+After:
+
+```
+/**
+ * Runs the checks in one of three modes:
+ *
+ * - `fast`: syntax checks only. About a second.
+ * - `full`: syntax and type checks. About a minute.
+ * - `ci`: `full` and the lint. Fails on a warning.
+ */
+fun check(mode: Mode)
+```
+
 Before (restates the code):
 
 ```
@@ -376,13 +435,14 @@ After: no comment. When the project requires one: "Sets how many times a
 failed request runs again, and the delay between the runs."
 
 `references/examples.md` has more pairs, including inline comments,
-docstrings, and messages.
+docstrings, messages, and a README table.
 
 ## Lint
 
 The lint is a complement to the rules, never the primary check. It finds
-punctuation and the words in `references/words.md`, and nothing else. It
-can't see:
+punctuation and the words in `references/words.md`, and nothing else.
+
+What the lint can't see:
 
 - A sentence that fails the keep test.
 - A fact stated twice.
@@ -391,36 +451,35 @@ can't see:
 - An ambiguous sentence.
 - A passive with a contracted verb.
 - A wrong claim about the code.
+- A paragraph that has to be a list or a table.
 
-Those are most of the rules, and you find them only when you read the
-text as the reader. A text with no findings can still break most of this
-skill. Apply the rules first, then run the lint. Never report a clean
-lint as the result of the skill.
+How to use the lint:
+
+- The items above are most of the rules. You find them only when you
+  read the text as the reader.
+- A text with no findings can still break most of this skill.
+- Apply the rules first, then run the lint.
+- Never report a clean lint as the result of the skill.
 
 ```
 python3 scripts/doc_lint.py [--json] [--max-words N] FILE...
 ```
 
-Hard failures (exit code 1): a semicolon, an em dash, an en dash, a
-double hyphen, and a hyphen with a space on each side. Soft warnings: a
-sentence over the limit, a filler word, a Latin abbreviation, a word with
-a plainer swap, a figurative word, a likely passive, an "-ing" clause, an
-uncontracted negative. A soft warning is a question, not an order. The
-lint reads its word lists from `references/words.md`, so the two never
-differ.
+| Finding | Exit code | What it is |
+|---|---|---|
+| Hard failure | 1 | A semicolon, an em dash, an en dash, a double hyphen, or a hyphen with a space on each side. |
+| Soft warning | 0 | A sentence over the limit, a filler word, a Latin abbreviation, a word with a plainer swap, a figurative word, a likely passive, an "-ing" clause, or an uncontracted negative. A question, not an order. |
 
-The lint reads three kinds of file:
+The lint reads its word lists from `references/words.md`, so the two
+never differ.
 
-- A source file: the `/* */`, `//`, and `#` comments and the triple-quoted
-  strings. The lint doesn't read string literals, so it doesn't lint a
-  message in source code in place.
-- A `.json` file: every string value that has a space in it, so
-  identifiers, paths, and URLs pass.
-- A `.md` file: every paragraph, heading, list item, table row, and
-  front matter value. The lint skips code blocks, HTML tags, HTML
-  comments, images, template calls, and link reference definitions. It
-  reads the text of a link as prose. Every finding is a soft warning,
-  because the lint can't tell prose from markup it doesn't know.
+What the lint reads in each kind of file:
+
+| File | Reads | Skips |
+|---|---|---|
+| Source | The `/* */`, `//`, and `#` comments and the triple-quoted strings. | String literals, so a message in source code in place. |
+| `.json` | Every string value that has a space in it. | Identifiers, paths, and URLs. |
+| `.md` | Every paragraph, heading, list item, table row, front matter value, and link text. Every finding is a soft warning, because the lint can't tell prose from markup it doesn't know. | Code blocks, HTML tags, HTML comments, images, template calls, and link reference definitions. |
 
 The lint can't lint one message, one string, or a text in another doc
 format. Put the text in a temporary `.md` file and lint that file.
@@ -434,6 +493,7 @@ format. Put the text in a temporary `.md` file and lint that file.
 - Each term has one name in the file.
 - No fact appears twice in the file.
 - No idiom, no filler, no Latin abbreviation, no semicolon, no dash aside.
+- Three or more parallel facts are a list or a table, not a paragraph.
 - In a rewrite task, the code didn't change. Diff the file and look at
   the non-comment lines.
 - The lint reports no hard failure, and each soft warning has an answer.

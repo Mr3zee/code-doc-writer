@@ -68,7 +68,9 @@ comments. Read it when a rule in SKILL.md needs its source.
   verb, the articles, and "that". Write words in full.
 - 4.3 Use a vertical list for complex text. Colon at the end of the lead
   sentence. Each item starts with an uppercase letter. A period only after
-  a full sentence and after the last item.
+  a full sentence and after the last item. This skill goes further: a list
+  or a table for any three or more parallel facts, not only for complex
+  text. The Form rules in SKILL.md give the details.
 - 4.4 Connecting words join related sentences: and, but, then, thus, as a
   result.
 - 4.5 Use an article or "this" before a noun when English needs one. No
@@ -95,7 +97,9 @@ Descriptions. In code docs: what a declaration is or does.
 - 6.3 At most 25 words in a sentence.
 - 6.4 A paragraph starts with a topic sentence.
 - 6.5 One topic in a paragraph.
-- 6.6 At most six sentences in a paragraph.
+- 6.6 At most six sentences in a paragraph. In this skill a paragraph is
+  for one fact or for a line of argument. Parallel facts go in a list or a
+  table (rule 4.3).
 
 ## Section 7: Safety instructions
 

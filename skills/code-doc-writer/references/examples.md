@@ -268,6 +268,61 @@ Why: a public reader opens one class and doesn't see the others, so each
 class gets the `@param` text. One short sentence for each. The full rule
 is on the shared base class.
 
+## Paragraph that holds a list
+
+Before:
+
+```
+/**
+ * Loads the configuration. The loader reads the file that `path` names,
+ * then the `APP_CONFIG` environment variable, then the defaults, and the
+ * first source that has a key wins. A missing file is an error, but a
+ * missing variable isn't.
+ */
+fun loadConfig(path: Path): Config
+```
+
+After:
+
+```
+/**
+ * Loads the configuration from the first source that has each key:
+ *
+ * 1. The file at [path]. A missing file is an error.
+ * 2. The `APP_CONFIG` environment variable. A missing variable isn't an
+ *    error.
+ * 3. The defaults.
+ */
+fun loadConfig(path: Path): Config
+```
+
+Why: three sources in an order. A numbered list shows the order, and each
+item holds the one fact about its source.
+
+## README paragraph that holds a table
+
+Before:
+
+```
+The `timeout` option sets how long a request waits, in seconds, and
+defaults to 30. The `retries` option sets how many times a failed request
+runs again and defaults to 3. The `verbose` option prints each request
+and is off by default.
+```
+
+After:
+
+```
+| Option | Effect | Default |
+|---|---|---|
+| `timeout` | Seconds that a request waits. | 30 |
+| `retries` | Runs of a failed request after the first. | 3 |
+| `verbose` | Prints each request. | off |
+```
+
+Why: three items with the same two attributes. The reader finds one
+option, or compares the defaults, and skips the rest.
+
 ## Message
 
 Before:
