@@ -19,14 +19,17 @@ claude plugin marketplace add Mr3zee/code-doc-writer
 claude plugin install code-doc-writer@code-doc-writer
 ```
 
-Or:
+Or, into `~/.claude/skills/`:
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh
 ```
 
-The script saves the skill into `~/.claude/skills/`. With `sh -s -- --project` it saves
-into `.claude/skills/` of the current directory instead.
+Or, into `.claude/skills/` of the current directory:
+
+```
+curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh -s -- --project
+```
 
 ### Codex
 
@@ -35,14 +38,17 @@ codex plugin marketplace add Mr3zee/code-doc-writer
 codex plugin add code-doc-writer@code-doc-writer
 ```
 
-Or:
+Or, into `~/.agents/skills/`:
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh
 ```
 
-The script saves the skill into `~/.agents/skills/`. With `sh -s -- --project` it saves
-into `.agents/skills/` of the current directory instead.
+Or, into `.agents/skills/` of the current directory:
+
+```
+curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh -s -- --project
+```
 
 ### pi
 
@@ -52,23 +58,31 @@ Add `-l` for the current project only:
 pi install git:github.com/Mr3zee/code-doc-writer
 ```
 
-Or:
+Or, into `~/.agents/skills/`:
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh
 ```
 
-The script saves the skill into `~/.agents/skills/`. With `sh -s -- --project` it saves
-into `.agents/skills/` of the current directory instead.
+Or, into `.agents/skills/` of the current directory:
+
+```
+curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh -s -- --project
+```
 
 ### Junie
+
+Into `~/.junie/skills/`:
 
 ```
 curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh
 ```
 
-The script saves the skill into `~/.junie/skills/`. With `sh -s -- --project` it saves
-into `.junie/skills/` of the current directory instead.
+Into `.junie/skills/` of the current directory:
+
+```
+curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project
+```
 
 ## Publish
 

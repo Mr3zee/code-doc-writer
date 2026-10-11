@@ -35,27 +35,32 @@
 <h3>Claude Code</h3>
 <pre><code>claude plugin marketplace add Mr3zee/code-doc-writer
 claude plugin install code-doc-writer@code-doc-writer</code></pre>
-<p>Or:</p>
+<p>Or, into <code>~/.claude/skills/</code>:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh</code></pre>
-<p>The script saves the skill into <code>~/.claude/skills/</code>. With <code>sh -s -- --project</code> it saves into <code>.claude/skills/</code> of the current directory instead.</p>
+<p>Or, into <code>.claude/skills/</code> of the current directory:</p>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/claude_install.sh | sh -s -- --project</code></pre>
 
 <h3>Codex</h3>
 <pre><code>codex plugin marketplace add Mr3zee/code-doc-writer
 codex plugin add code-doc-writer@code-doc-writer</code></pre>
-<p>Or:</p>
+<p>Or, into <code>~/.agents/skills/</code>:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh</code></pre>
-<p>The script saves the skill into <code>~/.agents/skills/</code>. With <code>sh -s -- --project</code> it saves into <code>.agents/skills/</code> of the current directory instead.</p>
+<p>Or, into <code>.agents/skills/</code> of the current directory:</p>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/codex_install.sh | sh -s -- --project</code></pre>
 
 <h3>pi</h3>
 <p>Add <code>-l</code> for the current project only:</p>
 <pre><code>pi install git:github.com/Mr3zee/code-doc-writer</code></pre>
-<p>Or:</p>
+<p>Or, into <code>~/.agents/skills/</code>:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh</code></pre>
-<p>The script saves the skill into <code>~/.agents/skills/</code>. With <code>sh -s -- --project</code> it saves into <code>.agents/skills/</code> of the current directory instead.</p>
+<p>Or, into <code>.agents/skills/</code> of the current directory:</p>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/pi_install.sh | sh -s -- --project</code></pre>
 
 <h3>Junie</h3>
+<p>Into <code>~/.junie/skills/</code>:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh</code></pre>
-<p>The script saves the skill into <code>~/.junie/skills/</code>. With <code>sh -s -- --project</code> it saves into <code>.junie/skills/</code> of the current directory instead.</p>
+<p>Into <code>.junie/skills/</code> of the current directory:</p>
+<pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project</code></pre>
 <script>
   var icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
   var check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>';
