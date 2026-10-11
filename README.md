@@ -1,7 +1,8 @@
 # code-doc-writer
 
 A skill for coding agents. It writes and rewrites doc comments, inline
-code comments, and user-facing messages in short plain technical English.
+code comments, user-facing messages, and documentation such as README
+files, changelogs, and guides, in short plain technical English.
 The language rules come from ASD-STE100 (Simplified Technical English),
 adapted for programming.
 
@@ -114,6 +115,6 @@ gallery, and users run `pi install npm:code-doc-writer`.
 
 ### Junie
 
-Junie has no marketplace yet. The install script lives in `docs/`, which
+Junie has no marketplace yet. The install script is in `docs/`, which
 GitHub Pages serves at `https://mr3zee.github.io/code-doc-writer/`. A push
 to `master` updates the page.

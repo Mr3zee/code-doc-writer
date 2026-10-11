@@ -1,6 +1,6 @@
 {
   "name": "code-doc-writer",
-  "description": "Write and rewrite doc comments, code comments, and user-facing messages in short plain technical English based on ASD-STE100.",
+  "description": "Write and rewrite doc comments, code comments, user-facing messages, and documentation in short plain technical English based on ASD-STE100.",
   "owner": {
     "name": "Alexander Sysoev"
   },
@@ -8,7 +8,7 @@
     {
       "name": "code-doc-writer",
       "source": "./",
-      "description": "Write and rewrite doc comments, code comments, and user-facing messages in short plain technical English based on ASD-STE100."
+      "description": "Write and rewrite doc comments, code comments, user-facing messages, and documentation in short plain technical English based on ASD-STE100."
     }
   ]
 }

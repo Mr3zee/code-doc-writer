@@ -1,6 +1,6 @@
 {
   "name": "code-doc-writer",
   "version": "0.1.0",
-  "description": "Write and rewrite doc comments, code comments, and user-facing messages in short plain technical English based on ASD-STE100.",
+  "description": "Write and rewrite doc comments, code comments, user-facing messages, and documentation in short plain technical English based on ASD-STE100.",
   "skills": "./skills/"
 }

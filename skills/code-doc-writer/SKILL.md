@@ -18,12 +18,13 @@ description: >-
 
 # Code doc writer
 
-Write comments and messages so a reader gets the facts fast. The language
-rules come from ASD-STE100 (Simplified Technical English), adapted for
-programming. The scope rules come from one idea: a comment is only for what
-the code can't say. Each sentence costs the reader time and the next
-editor upkeep, so the text that gives the facts in the fewest sentences
-wins. No comment is a good result when the code gives every fact.
+Write comments, messages, and documentation so a reader gets the facts
+fast. The language rules come from ASD-STE100 (Simplified Technical
+English), adapted for programming. The scope rules come from one idea: a
+comment is only for what the code can't say. Each sentence costs the
+reader time and the next editor upkeep, so the text that gives the facts
+in the fewest sentences wins. No comment is a good result when the code
+gives every fact.
 
 ## Scope
 
@@ -93,8 +94,10 @@ a public fact only to add to it.
    docs. Fix a wrong claim. Find the fact behind an ambiguous sentence and
    write it. When you can't check a claim that comes from the original
    text, keep its wording.
-8. Run `scripts/doc_lint.py` on the file. Fix every hard failure. Read
-   each soft warning and fix it or leave it with a reason.
+8. Run `scripts/doc_lint.py` on the file. When the text isn't in a form
+   the lint reads, put it in a temporary `.md` file and lint that file.
+   Fix every hard failure. Read each soft warning and fix it or leave it
+   with a reason.
 9. In a rewrite, compare the result with the original. The result has
    every kept fact and invents none. A qualifier such as "some", "only",
    or "when X" is a fact.
@@ -222,8 +225,8 @@ Words:
   "A workaround has to have a bug link", not "a workaround keeps its bug
   link". "The list has one entry", not "the list keeps one entry".
 - No filler. Delete: note that, basically, simply, just, actually,
-  essentially, of course, it is worth noting, in order to, deliberately, on
-  purpose, honest, by design.
+  essentially, of course, it is worth noting, deliberately, on purpose,
+  honest, by design. "In order to" becomes "to".
 - No Latin abbreviations. "For example", not "e.g.". "That is", not
   "i.e.". Delete "etc." and name the items or stop the list.
 - No hedge modals. "May", "might", "could", "would" become "can". Replace
@@ -288,8 +291,8 @@ Rules for messages:
 
 - Search the file for string literals that a person reads.
 - In a message every sentence, the problem included, gets the 20-word
-  limit of an instruction. Run the lint with `--max-words 20` on a file
-  with messages.
+  limit of an instruction. Put the messages in a temporary `.md` file and
+  run the lint on it with `--max-words 20`.
 - Line length rules of the code don't apply to a file with data.
 - At best three sentences for the problem and the fix. A fixed closing
   sentence that every message of a kind carries, such as a suppression
@@ -385,14 +388,26 @@ docstrings, and messages.
 python3 scripts/doc_lint.py [--json] [--max-words N] FILE...
 ```
 
-Hard failures (exit code 1): a semicolon, a dash aside. Soft warnings: a
+Hard failures (exit code 1): a semicolon, an em dash, an en dash, a
+double hyphen, and a hyphen with a space on each side. Soft warnings: a
 sentence over the limit, a filler word, a Latin abbreviation, a word with
 a plainer swap, a figurative word, a likely passive, an "-ing" clause, an
 uncontracted negative. A soft warning is a question, not an order. The
 lint reads its word lists from `references/words.md`, so the two never
-differ. The lint reads `/* */`, `//`, `#`, and triple-quoted strings in
-source files. In a `.json` file it reads every string value that has a
-space in it, so identifiers, paths, and URLs pass.
+differ.
+
+The lint reads three kinds of file:
+
+- A source file: the `/* */`, `//`, and `#` comments and the triple-quoted
+  strings. String literals aren't read, so a message in source code isn't
+  linted in place.
+- A `.json` file: every string value that has a space in it, so
+  identifiers, paths, and URLs pass.
+- A `.md` file: every paragraph, heading, list item, and table row.
+  Fenced code is skipped.
+
+The lint can't lint one message, one string, or a text in another doc
+format. Put the text in a temporary `.md` file and lint that file.
 
 ## Final check
 

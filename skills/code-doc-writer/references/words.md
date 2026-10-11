@@ -29,7 +29,7 @@ separated by commas, a condition in parentheses after the item.
 | keep (only for "don't remove") | retain, preserve, maintain, hold on to |
 | put | place, insert, position |
 | start | begin, commence, initiate, launch |
-| stop, terminate | terminate, cease, halt |
+| stop | terminate, cease, halt |
 | send | transmit |
 | read, write | save (a file), persist |
 | check, make sure | verify, ensure, guarantee, make certain |

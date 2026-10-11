@@ -11,6 +11,10 @@ Usage:
     doc_lint.py [--json] [--max-words N] FILE...
 The lint reads a .json file as data and lints every string value that
 has a space in it, so identifiers, paths, and URLs pass.
+The lint reads a .md file as prose: each paragraph, heading, list item,
+and table row is one block. Fenced code is skipped. To lint a text that
+isn't a comment, such as one message or a string in a source file, put
+it in a temporary .md file and lint that file.
 The word lists come from references/words.md next to this script's
 directory: the two swap tables, the delete list, and the figurative list.
 Exit code 1 when a hard rule fails.
@@ -231,6 +235,55 @@ def json_strings(text):
     return out
 
 
+MD_MARKER = re.compile(r"^(#{1,6}\s+|[-*+]\s+|\d+[.)]\s+|>\s*)")
+MD_RULE = re.compile(r"^(---+|\*\*\*+|___+|\|?\s*:?-{3,}[-|:\s]*)$")
+
+
+def markdown_blocks(text):
+    """Return (line, prose) pairs for a Markdown document.
+
+    A paragraph, a heading, a list item, or a table row is one block. A
+    fenced code block, a rule, and a table separator row are skipped.
+    """
+    out = []
+    buf, start = [], [0]
+    in_fence = False
+
+    def flush():
+        if buf:
+            out.append((start[0], "\n".join(buf)))
+        buf.clear()
+
+    for i, raw in enumerate(text.splitlines(), 1):
+        s = raw.strip()
+        if s.startswith("```") or s.startswith("~~~"):
+            in_fence = not in_fence
+            flush()
+            continue
+        if in_fence:
+            continue
+        if not s or MD_RULE.match(s):
+            flush()
+            continue
+        ln = raw.lstrip()
+        m = MD_MARKER.match(ln)
+        if m:
+            flush()
+            ln = ln[m.end():]
+            start[0] = i
+        elif s.startswith("|"):
+            flush()
+            ln = " ".join(c.strip() for c in s.strip("|").split("|"))
+            start[0] = i
+        elif not buf:
+            start[0] = i
+        buf.append(ln)
+        if m and m.group(1).startswith("#") or s.startswith("|"):
+            flush()
+    flush()
+    return out
+
+
 def strip_code(comment):
     """Drop fenced code and shorten code spans so they count as one word."""
     comment = re.sub(r"```.*?```", " ", comment, flags=re.S)
@@ -248,7 +301,12 @@ def count_words(sentence):
 def lint_file(path, max_words):
     text = open(path, encoding="utf-8", errors="replace").read()
     findings = []
-    blocks = json_strings(text) if path.endswith(".json") else extract_comments(text)
+    if path.endswith(".json"):
+        blocks = json_strings(text)
+    elif path.endswith((".md", ".markdown")):
+        blocks = markdown_blocks(text)
+    else:
+        blocks = extract_comments(text)
     for line, raw in blocks:
         if not raw.strip():
             continue
