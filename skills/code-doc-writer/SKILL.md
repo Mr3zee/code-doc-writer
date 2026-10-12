@@ -29,8 +29,9 @@ the reader gets the facts fast. Three kinds of rules:
 - Form rules: structured text where the facts have a structure. Sentences
   and paragraphs where they don't.
 
-The measure: the text that gives the facts in the fewest words, in the
-form that the reader scans fastest, is the best text.
+The measure is the reader's effort, not the word count. The best text
+is the one the reader understands on the first read.
+Always asses the cognitive load to the useful information ratio.
 
 Files in the skill directory:
 
@@ -99,6 +100,24 @@ Which reader a text has:
 Use `@see` or a link for related API or a docs page, not for a fact the
 reader must know.
 
+## What costs the reader
+
+Each of these is work for the reader. The keep test and the language
+rules each remove one of them:
+
+- Rereading: a fact the reader already has, from the context or from a
+  text they read before. They read it, recognize it, and discard it.
+  This is the largest cost, because it accumulates: each known fact
+  makes the reader slower on the next one. History, rationale, and a
+  second very similar example are the common forms.
+- Holding: a fact the reader must remember until a later sentence uses
+  it. A long sentence, a condition after its instruction, a pronoun that
+  points two sentences back.
+- Parsing twice: a sentence the reader must reread to get its structure.
+  A nested clause, an "-ing" clause, a semicolon, an aside.
+- Scanning: a paragraph the reader must read whole to find one item. In
+  a list, they jump to it.
+
 ## Procedure
 
 1. Read `DOCS_GUIDELINE.md` in the repository root if it exists. It holds
@@ -126,11 +145,9 @@ reader must know.
 9. In a rewrite, compare the result with the original. The result has
    every kept fact and invents none. A qualifier such as "some", "only",
    or "when X" is a fact.
-10. Read the result as the reader. This step, not the lint, decides
-    whether the text is complete. Delete a sentence that doesn't change what
-    the reader does or knows. Readability is the measure, and a shorter
-    text with the same facts reads faster. When the result is close to
-    the original in length, do the keep test again.
+10. Read the result as the reader. Decide if the cognitive load 
+    to the useful information ratio is acceptable. This step, not the lint,
+    decides whether the text is complete.
 11. After each self-contained part (a file, a page, a section, a group of
     related declarations), read the result once more for:
     - A sentence that referred to a deleted sentence.
@@ -329,7 +346,7 @@ comments, inline comments, docstrings, messages, and log lines.
 
 ## Final check
 
-- Every sentence passed the keep test.
+- Every sentence passed the keep test and the reader test (step 10).
 - No user doc names a private type, a module, a build tool, or an
   internal mechanism.
 - User docs state defaults and tell when to use the element.
