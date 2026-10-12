@@ -79,6 +79,76 @@ After:
 Why: the reader of a changelog asks what changed for them. The internal
 class names and the refactoring don't answer that question.
 
+## Pull request description that narrates the branch
+
+Before:
+
+```
+Title: Fix upload issues
+
+This PR addresses the upload problems we've been seeing. I initially tried
+to fix it in the client but after some discussion with the team decided
+it made more sense to handle it on the server side. Basically what happens
+now is that if an upload fails due to a network error we retry it up to 3
+times with exponential backoff before giving up. I also took the
+opportunity to clean up some of the logging in UploadService.kt and
+renamed a few variables for clarity. Let me know if you have any
+questions!
+```
+
+After:
+
+```
+Title: Retry a failed upload three times
+
+A network error during an upload fails the whole request (#231).
+
+- `UploadService` retries an upload up to three times after a network
+  error, with exponential backoff. Any other error fails at once.
+- The retry has no test for the backoff delay. Check the timing in
+  `retryUpload`.
+```
+
+Why: the reviewer has the diff, so the rename and the log cleanup need no
+sentence. The history of the branch is work for the reader and changes
+nothing in the review. The reason and the untested part stay, because
+the reviewer can't read them from the diff.
+
+## Issue description that tells a story
+
+Before:
+
+```
+Title: Parser is broken!!
+
+So I was working on migrating our config files over to the new format
+yesterday and everything was going fine until I hit one file that just
+would not parse. Spent like two hours on this. It turns out the file had
+been saved by Notepad on Windows and I think it has some weird invisible
+character at the start or something? Anyway the parser just silently
+returns nothing which is really bad because we didn't notice until
+production. This is a pretty critical issue for us, please prioritize.
+```
+
+After:
+
+```
+Title: `parse` returns an empty list for a file with a UTF-8 BOM
+
+1. Save `config.toml` with a UTF-8 BOM. Notepad on Windows adds one by
+   default.
+2. Run `confix parse config.toml`.
+
+Output: `[]`. No error.
+
+Expected: the parsed entries, or an error that names the BOM.
+
+confix 2.3.1, Windows 11.
+```
+
+Why: the developer needs the steps, the output, and the expected result,
+and nothing more.
+
 ## Help text that teaches the tool
 
 Before:

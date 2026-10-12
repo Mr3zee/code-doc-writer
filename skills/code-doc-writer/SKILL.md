@@ -7,9 +7,10 @@ description: >-
   rustdoc, Go doc comments), inline comments, TODO and FIXME notes,
   user-facing messages (diagnostics, errors, exceptions, assertions,
   warnings, deprecation notices, log lines, CLI output, help text,
-  message templates), and documentation in any format (README files,
-  changelogs, docs websites, guides, Markdown, reStructuredText,
-  AsciiDoc). Use it every time you write, change, or delete such a text,
+  message templates), pull request titles and descriptions, issue
+  titles and descriptions (bug reports, feature requests), and
+  documentation in any format (README files, changelogs, docs websites,
+  guides, Markdown, reStructuredText, AsciiDoc). Use it every time you write, change, or delete such a text,
   in any language, during any task. A one-line comment that is a side
   effect of a code change counts. Also use it when someone asks to
   simplify, shorten, clean up, review, or remove the noise or the
@@ -39,7 +40,7 @@ Files in the skill directory:
 |---|---|
 | `references/ste-rules.md` | The ASD-STE100 rules in short form, and how each applies to docs, messages, and comments. |
 | `references/words.md` | The word swaps, the filler to delete, and the words that are often figurative. The lint reads its lists from this file. |
-| `references/document-shape.md` | The shape of a documentation page and a changelog entry. |
+| `references/document-shape.md` | The shape of a documentation page, a changelog entry, a pull request description, and an issue description. |
 | `references/comments-in-code.md` | The shape of a doc comment and an inline comment, and the order of the tags. |
 | `references/messages.md` | The three parts of a message, the rules for messages and log lines, and one example. |
 | `references/examples.md` | Before and after pairs for every kind of text. |
@@ -58,6 +59,8 @@ is a side effect of a code change counts.
 | Comments in data files | A `$comment` key in JSON, a `#` line in YAML, a comment block in a template. |
 | User-facing messages | Diagnostics, errors, exceptions, assertions, warnings, deprecation notices, log lines, CLI output, help text, message templates in data files. |
 | Documentation | README files, changelogs, guides, docs websites, Markdown, reStructuredText, AsciiDoc, any other doc format. |
+| Pull request descriptions | The title and the body of a pull request or a merge request. |
+| Issue descriptions | The title and the body of a bug report or a feature request in an issue tracker. |
 
 Rules for every kind of text:
 
@@ -96,6 +99,8 @@ Which reader a text has:
 | A doc comment on a declaration that a user of the published artifact can see. | User docs. Visibility alone doesn't decide. A public class in a module that users never depend on has private docs. Check the module's purpose before you decide. |
 | A doc comment on any other declaration. | Private docs. |
 | An inline comment. | Private docs. |
+| A pull request description. | Private docs. The reader is a reviewer who has the diff. |
+| An issue description. | Private docs. The reader is a developer who has the code but not the reporter's environment. |
 | A message. | User docs. The reader has the message and nothing else. |
 
 Use `@see` or a link for related API or a docs page, not for a fact the

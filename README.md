@@ -1,8 +1,9 @@
 # code-doc-writer
 
 A skill for coding agents. It writes and rewrites doc comments, inline
-code comments, user-facing messages, and documentation such as README
-files, changelogs, and guides, in short plain technical English.
+code comments, user-facing messages, pull request and issue
+descriptions, and documentation such as README files, changelogs, and
+guides. The text is short plain technical English.
 The language rules come from ASD-STE100 (Simplified Technical English),
 adapted for programming.
 
