@@ -56,7 +56,7 @@ meaning. Use each with its one meaning. "Cache" and "override" are both a
 verb and a noun.
 
 - Verbs: compile, parse, resolve, register, configure (an object, not a
-  value), enable and disable (a feature, not a permission), install, load
+  value), enable and disable (turn a feature on or off), install, load
   (into memory), publish, deploy, serialize, deserialize, encode, decode,
   encrypt, cache, index, sort, filter, map, reduce, merge, split, validate
   (against a schema), handle (an event or exception), throw (an exception
@@ -74,13 +74,35 @@ verb and a noun.
   registry, runtime, scope, session, severity, target, task, token, type,
   variant, visibility, warning, error.
 
-"Keep" means "don't remove". For a requirement, write "has to have" or
-"must have". For a state, write "has". Not "the task keeps its output",
-but "the task has to have an output" or "the task has an output".
-Use "default" as a noun or adjective. The verb form "defaults to X" is an
-accepted term.
-"Fallback" is the noun, "fall back to" is the verb. "The loader falls back
-to the bundled file."
+### Enable and disable
+
+STE rejects these words. This skill accepts them in one sense: turn a
+feature on or off.
+
+| OK | Not OK |
+|---|---|
+| Enable the cache. | This enables the user to run the task. |
+| The flag disables the check. | The API enables plugins to add tasks. |
+| The feature is enabled by default. | |
+
+### Keep
+
+"Keep" means "don't remove". It doesn't mean "have" or "must have".
+
+| OK | Not OK |
+|---|---|
+| Keep the old file. | The task keeps its output. |
+| The cache keeps the last result. | Every plugin keeps a name. |
+
+### Default and fallback
+
+| OK | Not OK |
+|---|---|
+| The default is `true`. | The loader uses a fall back. |
+| The default value is `true`. | The loader fallbacks to the bundled file. |
+| The option defaults to `true`. | The loader falls back on the bundled file. |
+| The loader falls back to the bundled file. | |
+| The bundled file is the fallback. | |
 
 ## Words to delete
 

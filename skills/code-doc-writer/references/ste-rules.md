@@ -30,7 +30,10 @@ SKILL.md needs its source.
   "Footgun", "gotcha", "magic" are slang.
 - 1.11 One technical noun for one item. Never two names for one thing.
 - 1.12 Technical verbs: category 2 is computer processes. Enable, disable,
-  install, load, update, debug, boot, format, and more.
+  install, load, update, debug, boot, format, and more. STE rejects
+  "enable" and "disable". This skill accepts them for a feature ("enable
+  the cache"), not for a person ("enable the user to"). See
+  `words.md`.
 - 1.13 Don't use a technical verb as a noun. In code, "cache" and
   "override" are both a verb and a noun, each with one meaning.
 - 1.14 American spelling.
