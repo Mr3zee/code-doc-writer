@@ -1,9 +1,11 @@
 # Examples
 
 Each pair shows a text that breaks the rules and the text that passes
-them. The first pairs are documentation pages and messages. The rest are
-comments, most in Kotlin syntax and one in a Python docstring. The rules
-are the same for every format, language, and comment syntax.
+them. The first pairs are documentation pages and help text. The rest are
+comments, most in Kotlin syntax and one in a Python docstring, then a
+message and a log line. The rules are the same for every format, language,
+and comment syntax. SKILL.md has two more pairs, and `messages.md` has
+one.
 
 ## README introduction that argues
 
@@ -98,6 +100,41 @@ After:
 Why: the effect and the default are the facts. The advice about shared
 machines is a reason that the reader who has a shared machine already
 knows.
+
+## Paragraph that holds a table
+
+Before:
+
+```
+The `timeout` option sets how long a request waits, in seconds, and
+defaults to 30. The `retries` option sets how many times a failed request
+runs again and defaults to 3. The `verbose` option prints each request
+and is off by default.
+```
+
+After:
+
+```
+| Option | Effect | Default |
+|---|---|---|
+| `timeout` | Seconds that a request waits. | 30 |
+| `retries` | Runs of a failed request after the first. | 3 |
+| `verbose` | Prints each request. | off |
+```
+
+Why: three items with the same two attributes. A table shows each
+attribute in one column, so the reader finds a default and doesn't read
+the sentences.
+
+## Sentence that restates the heading
+
+Before, under the heading "Configuration options":
+
+```
+This section describes the configuration options.
+```
+
+After: no text. The heading says it.
 
 ## Public doc that explains the implementation
 
@@ -245,6 +282,29 @@ repeat(3) {
 
 Why: the count and the delay are in the code. The behavior of the server
 isn't.
+
+## Inline comment that argues an intent
+
+Before:
+
+```
+We deliberately keep the index outside the output directory. The packaging
+step zips everything in the output directory, and an index inside the
+archive would be picked up by the loader as a plugin, which is obviously
+not what we want. The index is regenerated on every run anyway, so it can
+never go stale.
+```
+
+After:
+
+```
+The index isn't in the output directory: the packaging step zips that
+directory, and the loader treats each file in the archive as a plugin.
+Every run regenerates the index.
+```
+
+Why: the intent words and the feeling go. The two facts that remain tell
+why the code doesn't do the obvious thing, so they stay.
 
 ## Why the code doesn't do the obvious thing
 

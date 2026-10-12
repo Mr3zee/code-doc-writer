@@ -32,6 +32,19 @@ the reader gets the facts fast. Three kinds of rules:
 The measure: the text that gives the facts in the fewest words, in the
 form that the reader scans fastest, is the best text.
 
+Files in the skill directory:
+
+| File | Holds |
+|---|---|
+| `references/ste-rules.md` | The ASD-STE100 rules in short form, and how each applies to docs, messages, and comments. |
+| `references/words.md` | The word swaps, the filler to delete, and the words that are often figurative. The lint reads its lists from this file. |
+| `references/document-shape.md` | The shape of a documentation page and a changelog entry. |
+| `references/comments-in-code.md` | The shape of a doc comment and an inline comment, and the order of the tags. |
+| `references/messages.md` | The three parts of a message, the rules for messages and log lines, and one example. |
+| `references/examples.md` | Before and after pairs for every kind of text. |
+| `references/lint.md` | What the lint finds, what it can't see, how to run it, and what it reads in each kind of file. |
+| `scripts/doc_lint.py` | The lint. |
+
 ## Scope
 
 A rewrite follows the same rules as a new text. A one-line comment that
@@ -100,15 +113,16 @@ reader must know.
 5. Write each kept sentence with the language rules.
 6. Give the kept sentences their form: a list or a table when
    [Form](#language-rules) says so, in the order that the shape of the
-   text gives. [Shape of a document](#shape-of-a-document), [Comments in
-   code](#comments-in-code), and [Messages](#messages) give the shapes.
+   text gives. `references/document-shape.md`,
+   `references/comments-in-code.md`, and `references/messages.md` give
+   the shapes.
 7. Check each claim against the code or the project's docs. Fix a wrong
    claim. Find the fact behind an ambiguous sentence and write it. When
    you can't check a claim that comes from the original text, keep its
    wording.
 8. Run `scripts/doc_lint.py` on the file. Fix every hard failure. Read
-   each soft warning and fix it or leave it with a reason. [Lint](#lint)
-   tells what the lint finds and what it can't see.
+   each soft warning and fix it or leave it with a reason.
+   `references/lint.md` tells what the lint finds and what it can't see.
 9. In a rewrite, compare the result with the original. The result has
    every kept fact and invents none. A qualifier such as "some", "only",
    or "when X" is a fact.
@@ -274,96 +288,6 @@ Words:
   when the doc tool renders one. When the tool renders no name, a bare URL
   in `@see` is the accepted form.
 
-## Shape of a document
-
-- Follow the shape of the existing pages of the same kind.
-- One topic in each section. The headings alone give the outline.
-- The common case comes before the exceptions. A rule comes before the
-  example that shows it.
-- A changelog entry says what changed for the reader, not what changed in
-  the code.
-
-## Comments in code
-
-Decide the reader first. [Two readers](#two-readers) tells which
-declarations have user docs.
-
-- First sentence: what it is or what it does, in words the name doesn't
-  already give. A function starts with its action: "Returns", "Registers",
-  "Writes". A type or property starts with a noun phrase: "The timeout of
-  each request." When the name gives every fact, write no comment. Never
-  start with "Also".
-- Then the facts from the keep test. One sentence each, or a list or a
-  table when [Form](#language-rules) says so.
-- A code example when it shows the reader how to use the declaration
-  faster than words do. The example is short and has no comments inside
-  it. For more examples, link to the website.
-- Tags, in this order:
-  - `@param` only when the name and the type don't say it. A `@param` in
-    user docs gets one short sentence even when the doc of the type gives
-    the long form, because the reader opens one declaration at a time.
-  - `@return` only when the first sentence doesn't say it.
-  - `@throws` when the caller can catch or check for the exception. An
-    argument or configuration error that stops the program gets no tag.
-- Most doc comments fit in one to three sentences.
-- A one-line doc on a member of a group can be a noun phrase: "The timeout
-  of `read`." A noun phrase has no verb, so the sentence rules don't apply
-  to it.
-- An inline comment describes. "The pair maps to one `\n`, so an
-  insertion can't split it." Not "Map the pair to one `\n`". Use the
-  imperative only for an instruction to the next editor, with the reason
-  first: "The getter has a side effect in library version 2.4, so don't
-  read it."
-- Delete a comment that says what the next lines do. The code shows it.
-  This includes a comment that names the algorithm: "binary search",
-  "lower bound", "iterate over the handlers".
-- Put the comment where the decision is.
-- Three or more parallel facts, such as the cases of a branch, go in a
-  list with one item on each line.
-
-## Messages
-
-A message has three parts, in this order:
-
-1. The problem. Name the element with its exact identifier. One or two
-   sentences.
-2. The fix. One sentence in the imperative. "Add a return type to
-   `parse`."
-3. A reference, when more detail exists elsewhere. Better as a link.
-
-Rules for messages:
-
-- Search the file for string literals that a person reads.
-- In a message every sentence, the problem included, gets the 20-word
-  limit of an instruction. Lint the messages with `--max-words 20`.
-- The line length limit of the code doesn't apply to a message in a data
-  file.
-- At most three sentences for the problem and the fix. A fixed closing
-  sentence that every message of a kind carries, such as a suppression
-  hint, is one short sentence after them and isn't counted.
-- The fix ends the message body. No reason after it. Alternative fixes
-  join in one sentence with "or".
-- No blame, no jokes, no "oops", no "please", no exclamation marks.
-- Present tense. "The class is open", not "the class has been left open".
-- A log line states one event with its identifiers. It has no filler and
-  no advice.
-
-Before:
-
-```
-The configuration file `{0}` could not be loaded because it appears to
-contain one or more entries whose keys aren't recognized by this version
-of the tool, which is why processing has been aborted. Please double-check
-the file and try again!
-```
-
-After:
-
-```
-`{0}` has a key that this version of the tool doesn't accept. Remove the
-key, or update the tool.
-```
-
 ## Examples
 
 Before (a rationale and a history):
@@ -380,24 +304,6 @@ After:
 
 ```
 `strict` treats every warning as an error. Use it in CI. Default is off.
-```
-
-Before (an intent and a reader who knows the domain):
-
-```
-We deliberately keep the index outside the output directory. The packaging
-step zips everything in the output directory, and an index inside the
-archive would be picked up by the loader as a plugin, which is obviously
-not what we want. The index is regenerated on every run anyway, so it can
-never go stale.
-```
-
-After:
-
-```
-The index isn't in the output directory: the packaging step zips that
-directory, and the loader treats each file in the archive as a plugin.
-Every run regenerates the index.
 ```
 
 Before (parallel facts in a paragraph):
@@ -418,76 +324,8 @@ The check runs in one of three modes:
 - `ci`: `full` and the lint. Fails on a warning.
 ```
 
-Before (parallel facts with the same attributes):
-
-```
-The `timeout` option sets how long a request waits, in seconds, and
-defaults to 30. The `retries` option sets how many times a failed request
-runs again and defaults to 3. The `verbose` option prints each request
-and is off by default.
-```
-
-After:
-
-```
-| Option | Effect | Default |
-|---|---|---|
-| `timeout` | Seconds that a request waits. | 30 |
-| `retries` | Runs of a failed request after the first. | 3 |
-| `verbose` | Prints each request. | off |
-```
-
-Before (restates the context), under the heading "Configuration options":
-
-```
-This section describes the configuration options.
-```
-
-After: no text. The heading says it.
-
 `references/examples.md` has more pairs: documentation pages, doc
 comments, inline comments, docstrings, messages, and log lines.
-
-## Lint
-
-The lint finds punctuation, the words in `references/words.md`, a
-sentence over the limit, a likely passive, an "-ing" clause, and an
-uncontracted negative. Nothing else.
-
-What the lint can't see:
-
-- A sentence that fails the keep test.
-- A fact stated twice.
-- A reason given to a reader who knows it.
-- A figurative use of a word that isn't in the list.
-- An ambiguous sentence.
-- A passive with a contracted verb.
-- A wrong claim about the code.
-- A paragraph that has to be a list or a table.
-
-These items are most of the rules. You find them only when you read the
-text as the reader. Apply the rules first, then run the lint. Never
-report a clean lint as the result of the skill.
-
-```
-python3 scripts/doc_lint.py [--json] [--max-words N] FILE...
-```
-
-| Finding | Exit code | What it is |
-|---|---|---|
-| Hard failure | 1 | A semicolon, an em dash, an en dash, a double hyphen, or a hyphen with a space on each side. |
-| Soft warning | 0 | Every other finding. A question, not an order. |
-
-What the lint reads in each kind of file:
-
-| File | Reads | Skips |
-|---|---|---|
-| `.md`, `.markdown`, `.mdx` | Every paragraph, heading, list item, table row, front matter value, and link text. A link counts as one word. Every finding is a soft warning, because the lint can't tell prose from markup it doesn't know. | Code blocks, HTML tags, HTML comments, images, template calls, and link reference definitions. |
-| `.json` | Every string value that has a space in it. | Identifiers, paths, and URLs. |
-| Source | The `/* */`, `//`, and `#` comments and the triple-quoted strings. | String literals. |
-
-To lint a string literal, one message, or a text in another doc format,
-put the text in a temporary `.md` file and lint that file.
 
 ## Final check
 
