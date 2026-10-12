@@ -61,6 +61,24 @@ codex plugin add code-doc-writer@code-doc-writer</code></pre>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh</code></pre>
 <p>Into <code>.junie/skills/</code> of the current directory:</p>
 <pre><code>curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project</code></pre>
+<h2>Update</h2>
+
+<h3>Claude Code</h3>
+<p>Claude Code updates marketplace plugins on startup. To update by hand:</p>
+<pre><code>claude plugin marketplace update code-doc-writer
+claude plugin update code-doc-writer@code-doc-writer</code></pre>
+<p>Then restart Claude Code.</p>
+
+<h3>Codex</h3>
+<p>Refresh the marketplace, then add the plugin again:</p>
+<pre><code>codex plugin marketplace upgrade
+codex plugin add code-doc-writer@code-doc-writer</code></pre>
+
+<h3>pi</h3>
+<pre><code>pi update --extension git:github.com/Mr3zee/code-doc-writer</code></pre>
+
+<h3>curl scripts</h3>
+<p>Run the same install command again. The script removes the old copy and installs the current <code>master</code> branch.</p>
 <script>
   var icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
   var check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>';

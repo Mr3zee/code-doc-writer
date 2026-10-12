@@ -1,14 +1,15 @@
-# STE rules for code docs
+# STE rules for technical docs
 
 ASD-STE100 Issue 9 (2025) has 9 sections of writing rules and a dictionary.
-This file gives each rule in short form and says how it applies to code
-comments. Read it when a rule in SKILL.md needs its source.
+This file gives each rule in short form and says how it applies to
+documentation, messages, and code comments. Read it when a rule in
+SKILL.md needs its source.
 
 ## Section 1: Words
 
-- 1.1 Use approved words, technical nouns, and technical verbs. In code
-  docs the technical nouns are identifiers, tool names, formats, and domain
-  terms. The technical verbs are the domain's own verbs. `words.md` has
+- 1.1 Use approved words, technical nouns, and technical verbs. In
+  technical docs the technical nouns are identifiers, tool names, formats,
+  and domain terms. The technical verbs are the domain's own verbs. `words.md` has
   the table.
 - 1.2 Use a word only as its approved part of speech. "Test" is a noun.
   "Do a test", not "test the system". In code, use the domain's term: "run
@@ -79,8 +80,9 @@ comments. Read it when a rule in SKILL.md needs its source.
 
 ## Section 5: Procedural writing
 
-Instructions. In code docs: "how to use" sentences and `@param` text that
-tells the caller what to do.
+Instructions. In technical docs: a step in a procedure, a fix in a
+message, and a "how to use" sentence. Also `@param` text that tells the
+caller what to do.
 
 - 5.1 At most 20 words in a sentence.
 - 5.2 One instruction in a sentence, unless two actions happen together.
@@ -91,7 +93,8 @@ tells the caller what to do.
 
 ## Section 6: Descriptive writing
 
-Descriptions. In code docs: what a declaration is or does.
+Descriptions. In technical docs: what a feature, a page, or a declaration
+is or does.
 
 - 6.1 Give information step by step. One subject in each sentence.
 - 6.2 Repeat key words to connect sentences. Don't vary the term.
@@ -99,12 +102,11 @@ Descriptions. In code docs: what a declaration is or does.
 - 6.4 A paragraph starts with a topic sentence.
 - 6.5 One topic in a paragraph.
 - 6.6 At most six sentences in a paragraph. A paragraph is for one fact
-  or for a line of argument. Parallel facts go in a list or a table (rule
-  4.3).
+  or for a line of argument.
 
 ## Section 7: Safety instructions
 
-One rule applies to code docs: a warning about a harmful call starts
+One rule applies to technical docs: a warning about a harmful call starts
 with the command, then gives the risk. "Don't call this from the UI
 thread. It blocks until the file is read." Every other instruction puts
 the condition or the reason first (rule 5.4).

@@ -1,8 +1,103 @@
 # Examples
 
 Each pair shows a text that breaks the rules and the text that passes
-them. Most examples use Kotlin syntax. One is a Python docstring. The rules
-are the same for every language and comment syntax.
+them. The first pairs are documentation pages and messages. The rest are
+comments, most in Kotlin syntax and one in a Python docstring. The rules
+are the same for every format, language, and comment syntax.
+
+## README introduction that argues
+
+Before:
+
+```
+# fastcheck
+
+fastcheck was born out of frustration with existing linters, which are
+either painfully slow on large codebases or so configurable that nobody on
+the team can agree on a setup. It aims to be the linter you can just drop
+into any project and forget about. Under the hood it leverages an
+incremental parser so that only the files you touched are re-analyzed.
+```
+
+After:
+
+```
+# fastcheck
+
+A linter for large codebases. It has no configuration and checks only
+the files that changed since the last run.
+```
+
+Why: the history and the comparison with other tools don't tell the reader
+what the tool does. The first paragraph gives the two facts that make the
+reader use it or not.
+
+## Guide paragraph that holds a procedure
+
+Before:
+
+```
+To publish a release you first need to bump the version in `gradle.properties`,
+after which you should run the full test suite to make sure nothing is
+broken, and once it passes you tag the commit with the version number and
+push the tag, which triggers the release workflow.
+```
+
+After:
+
+```
+To publish a release:
+
+1. Set the version in `gradle.properties`.
+2. Run the tests.
+3. Tag the commit with the version and push the tag. The push starts the
+   release workflow.
+```
+
+Why: four actions in an order. One action in each step. The result of the
+last action stays in that step because the reader waits for it.
+
+## Changelog entry that describes the commit
+
+Before:
+
+```
+- Refactored the `ConfigLoader` internals to use the new `SourceChain`
+  abstraction and removed the legacy fallback path that nobody used
+  anymore (#412).
+```
+
+After:
+
+```
+- The `APP_CONFIG` environment variable no longer overrides a key that
+  the configuration file sets (#412).
+```
+
+Why: the reader of a changelog asks what changed for them. The internal
+class names and the refactoring don't answer that question.
+
+## Help text that teaches the tool
+
+Before:
+
+```
+--jobs N    Controls the level of parallelism. By default we pick the
+            number of CPU cores, which is usually a sensible choice, but
+            you may wish to lower it if you're running on a shared machine
+            or raise it if your tasks are mostly I/O bound.
+```
+
+After:
+
+```
+--jobs N    Tasks that run at the same time. Default is the number of
+            CPU cores.
+```
+
+Why: the effect and the default are the facts. The advice about shared
+machines is a reason that the reader who has a shared machine already
+knows.
 
 ## Public doc that explains the implementation
 
@@ -179,6 +274,18 @@ for (checker in checkers) session.register(checker)
 
 After: no comment.
 
+## Doc comment that restates the name
+
+Before:
+
+```
+/** Configures the retry policy. */
+fun retryPolicy(configure: RetryPolicy.() -> Unit)
+```
+
+After: no comment. When the project requires one: "Sets how many times a
+failed request runs again, and the delay between the runs."
+
 ## Docstring
 
 Before:
@@ -299,30 +406,6 @@ fun loadConfig(path: Path): Config
 
 Why: three sources in an order. A numbered list shows the order, and each
 item holds the one fact about its source.
-
-## README paragraph that holds a table
-
-Before:
-
-```
-The `timeout` option sets how long a request waits, in seconds, and
-defaults to 30. The `retries` option sets how many times a failed request
-runs again and defaults to 3. The `verbose` option prints each request
-and is off by default.
-```
-
-After:
-
-```
-| Option | Effect | Default |
-|---|---|---|
-| `timeout` | Seconds that a request waits. | 30 |
-| `retries` | Runs of a failed request after the first. | 3 |
-| `verbose` | Prints each request. | off |
-```
-
-Why: three items with the same two attributes. The reader finds one
-option, or compares the defaults, and skips the rest.
 
 ## Message
 

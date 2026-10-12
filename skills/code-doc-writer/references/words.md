@@ -1,7 +1,7 @@
 # Words
 
 The STE dictionary approves about 900 words and rejects about 1300 with
-alternatives. This file is the part that matters for code docs, adapted
+alternatives. This file is the part that matters for technical docs, adapted
 for programming. The adaptation: exact terms of computer science stay, even
 when STE rejects them. STE itself has this exception in its technical noun
 and technical verb categories (rules 1.5 and 1.12, category "computer
@@ -148,7 +148,7 @@ Filler adds no fact. Delete it and read the sentence again.
 
 ## Often figurative
 
-These words are figurative in most code docs. Literal use is fine: "the
+These words are figurative in most technical docs. Literal use is fine: "the
 oven bakes the bread". The lint flags each form of the word (bakes, baked,
 baking) and asks.
 

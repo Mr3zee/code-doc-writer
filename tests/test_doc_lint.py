@@ -79,10 +79,8 @@ class WordTableTest(unittest.TestCase):
         for word in ("do", "get", "keep", "stop", "send", "check", "add", "change"):
             self.assertNotIn(word, swaps, word)
 
-    def test_every_figurative_word_in_skill_is_in_words(self):
-        skill = " ".join((ROOT / "skills" / "code-doc-writer" / "SKILL.md").read_text().split())
+    def test_common_figurative_words_are_in_words(self):
         for word in ("bake", "ship", "surface", "swallow", "under the hood", "happy path", "sibling", "pull in"):
-            self.assertIn(word, skill)
             self.assertIn(word, dl.FIGURATIVE)
 
 

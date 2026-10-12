@@ -85,6 +85,39 @@ Into `.junie/skills/` of the current directory:
 curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- --project
 ```
 
+## Update
+
+### Claude Code
+
+Claude Code updates marketplace plugins on startup. To update by hand:
+
+```
+claude plugin marketplace update code-doc-writer
+claude plugin update code-doc-writer@code-doc-writer
+```
+
+Then restart Claude Code.
+
+### Codex
+
+Refresh the marketplace, then add the plugin again:
+
+```
+codex plugin marketplace upgrade
+codex plugin add code-doc-writer@code-doc-writer
+```
+
+### pi
+
+```
+pi update --extension git:github.com/Mr3zee/code-doc-writer
+```
+
+### curl scripts
+
+Run the same install command again. The script removes the old copy
+and installs the current `master` branch.
+
 ## Tests
 
 The lint has a test suite in `tests/`. Run it from the repository root:
