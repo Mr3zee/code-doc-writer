@@ -203,8 +203,8 @@ come from the standard.
 Form:
 
 - Prefer structured text to sentences and paragraphs. A paragraph is for
-  one fact, or for a line of argument where each sentence follows from
-  the one before.
+  one fact. A line of argument, where each sentence follows from the one
+  before, can be a paragraph or a list with one step in each item.
 - A vertical list for three or more parallel items: steps, options,
   conditions, parts, rules. Two items can stay in one sentence.
 - A table when three or more items have the same two or more attributes:

@@ -105,7 +105,8 @@ is or does.
 - 6.4 A paragraph starts with a topic sentence.
 - 6.5 One topic in a paragraph.
 - 6.6 At most six sentences in a paragraph. A paragraph is for one fact
-  or for a line of argument.
+  or for a line of argument. A line of argument can also be a list, with
+  one step in each item.
 
 ## Section 7: Safety instructions
 
