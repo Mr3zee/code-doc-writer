@@ -1,6 +1,6 @@
 {
   "name": "code-doc-writer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Write and rewrite doc comments, code comments, user-facing messages, and documentation in short plain technical English based on ASD-STE100.",
   "keywords": [
     "pi-package",
