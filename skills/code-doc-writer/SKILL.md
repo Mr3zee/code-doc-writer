@@ -81,6 +81,7 @@ Every text has one of two readers. Decide which one before you write.
 | | User docs | Private docs |
 |---|---|---|
 | Reader | A user of the product or library. Knows the domain, but doesn't read the source. | A developer of this codebase. Knows the domain, the modules, and the code. |
+| Default | A doc exists. Fill it. | No doc exists. Write one only when the keep test keeps at least one sentence. |
 | Has | One place at a time: the website, the README, the doc comment in the IDE, or one overload of a function. | The source and the user docs. |
 | Tell | What it does. When to use it. How to use it. What the reader must know first. | Only what the code can't show. |
 | Repeat | Every fact the reader needs in this place, even when another page, the README, or another overload also states it. | A fact from the user docs only to add to it. |
@@ -127,7 +128,9 @@ rules each remove one of them:
    spec. For a declaration, read the signature, the body, and the callers
    when the purpose isn't clear.
 3. Draft the text: one sentence for each fact that the reader needs. In a
-   rewrite, the draft is the existing text, split into sentences.
+   rewrite, the draft is the existing text, split into sentences. For
+   private docs the draft starts empty. Each sentence has to earn its
+   place with a keep reason. Most internal declarations get no comment.
 4. Apply the keep test to each sentence. Delete or keep.
 5. Write each kept sentence with the language rules.
 6. Give the kept sentences their form: a list or a table when

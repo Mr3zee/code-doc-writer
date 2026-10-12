@@ -3,11 +3,12 @@
 Decide the reader first. [Two readers](../SKILL.md#two-readers) tells which
 declarations have user docs.
 
+- When the name gives every fact, or the code speaks for itself, write no comment. 
+  For a private declaration this is by far the most common outcome.
 - First sentence: what it is or what it does, in words the name doesn't
   already give. A function starts with its action: "Returns", "Registers",
   "Writes". A type or property starts with a noun phrase: "The timeout of
-  each request." When the name gives every fact, write no comment. Never
-  start with "Also".
+  each request." Never start with "Also".
 - Then the facts from the keep test. One sentence each, or a list or a
   table when [Form](../SKILL.md#language-rules) says so.
 - A code example when it shows the reader how to use the declaration
