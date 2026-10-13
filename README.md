@@ -90,7 +90,11 @@ curl -fsSL https://mr3zee.github.io/code-doc-writer/junie_install.sh | sh -s -- 
 
 ### Claude Code
 
-Claude Code updates marketplace plugins on startup. To update by hand:
+Claude Code doesn't update this plugin on its own. To turn auto-update on,
+open `/plugin`, go to **Marketplaces**, select `code-doc-writer`, and enable
+auto-update. Claude Code then loads a new version in the next session.
+
+To update by hand:
 
 ```
 claude plugin marketplace update code-doc-writer

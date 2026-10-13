@@ -64,7 +64,8 @@ codex plugin add code-doc-writer@code-doc-writer</code></pre>
 <h2>Update</h2>
 
 <h3>Claude Code</h3>
-<p>Claude Code updates marketplace plugins on startup. To update by hand:</p>
+<p>Claude Code doesn't update this plugin on its own. To turn auto-update on, open <code>/plugin</code>, go to <strong>Marketplaces</strong>, select <code>code-doc-writer</code>, and enable auto-update. Claude Code then loads a new version in the next session.</p>
+<p>To update by hand:</p>
 <pre><code>claude plugin marketplace update code-doc-writer
 claude plugin update code-doc-writer@code-doc-writer</code></pre>
 <p>Then restart Claude Code.</p>
