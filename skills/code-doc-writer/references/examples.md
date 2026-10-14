@@ -30,7 +30,7 @@ A linter for large codebases. It has no configuration and checks only
 the files that changed since the last run.
 ```
 
-Why: the history and the comparison with other tools don't tell the reader
+Why: the history and the comparison with other tools don't give the reader
 what the tool does. The first paragraph gives the two facts that make the
 reader use it or not.
 
@@ -76,7 +76,7 @@ After:
   the configuration file sets (#412).
 ```
 
-Why: the reader of a changelog asks what changed for them. The internal
+Why: the reader of a changelog needs what changed for them. The internal
 class names and the refactoring don't answer that question.
 
 ## Pull request description that narrates the branch
@@ -114,7 +114,7 @@ sentence. The history of the branch is work for the reader and changes
 nothing in the review. The reason and the untested part stay, because
 the reviewer can't read them from the diff.
 
-## Issue description that tells a story
+## Issue description written as a story
 
 Before:
 
@@ -204,7 +204,7 @@ Before, under the heading "Configuration options":
 This section describes the configuration options.
 ```
 
-After: no text. The heading says it.
+After: no text. The heading gives the fact.
 
 ## Public doc that explains the implementation
 
@@ -260,7 +260,7 @@ After:
 fun displayName(): String
 ```
 
-Why: the return type says "never null". What the callers do with the
+Why: the return type shows "never null". What the callers do with the
 value isn't a fact about this function.
 
 ## Property doc that argues
@@ -322,7 +322,7 @@ After:
 class LineEndingMapping
 ```
 
-Why: the method names say what they do. The two facts that the code can't
+Why: the method names give the actions. The two facts that the code can't
 show are the two constraints from outside.
 
 ## Inline comment that repeats the code
@@ -373,8 +373,8 @@ directory, and the loader treats each file in the archive as a plugin.
 Every run regenerates the index.
 ```
 
-Why: the intent words and the feeling go. The two facts that remain tell
-why the code doesn't do the obvious thing, so they stay.
+Why: the intent words and the feeling go. The two facts that remain give
+the reason that the code doesn't do the obvious thing, so they stay.
 
 ## Why the code doesn't do the obvious thing
 
@@ -476,8 +476,8 @@ After:
 // One flush loses the last block on Windows: https://example.org/bugs/4521
 ```
 
-Why: a workaround has to have a bug link. The link tells the next editor
-when the workaround can go.
+Why: a workaround has to have a bug link. The link gives the next editor
+the condition for the removal of the workaround.
 
 ## Repeated boilerplate across declarations
 

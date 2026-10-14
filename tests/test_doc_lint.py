@@ -64,7 +64,7 @@ class WordTableTest(unittest.TestCase):
         self.assertEqual(dl.split_items("a (x, y), b"), [("a", " (x, y)"), ("b", "")])
 
     def test_tables_and_lists_load(self):
-        swaps, figurative = dl.load_words(dl.WORDS_FILE)
+        swaps, figurative, speech = dl.load_words(dl.WORDS_FILE)
         self.assertEqual(swaps["perform"], "do")
         self.assertEqual(swaps["append"], "add, remove (unless order matters)")
         self.assertEqual(swaps["however"], "but")
@@ -75,13 +75,19 @@ class WordTableTest(unittest.TestCase):
         self.assertIn("under the hood", figurative)
 
     def test_a_plain_verb_is_not_its_own_swap(self):
-        swaps, _ = dl.load_words(dl.WORDS_FILE)
+        swaps, _, _ = dl.load_words(dl.WORDS_FILE)
         for word in ("do", "get", "keep", "stop", "send", "check", "add", "change"):
             self.assertNotIn(word, swaps, word)
 
     def test_common_figurative_words_are_in_words(self):
         for word in ("bake", "ship", "surface", "swallow", "under the hood", "happy path", "sibling", "pull in"):
             self.assertIn(word, dl.FIGURATIVE)
+
+    def test_speech_and_thought_verbs_are_in_words(self):
+        for word in ("tell", "told", "say", "said", "ask", "want", "know", "think", "complain", "promise"):
+            self.assertIn(word, dl.SPEECH)
+            self.assertNotIn(word, dl.FIGURATIVE)
+        self.assertEqual(dl.SWAPS["tell"], "report, show (code or a text as the actor)")
 
 
 class WordFormsTest(unittest.TestCase):
@@ -448,6 +454,12 @@ class RulesTest(unittest.TestCase):
         with TempFiles() as t:
             f = t.lint("a.py", "# The change shipped. It bakes the value in. Websites.\n")
         self.assertEqual(sorted(texts(f, "figurative?")), ["'bakes': literal use only", "'shipped': literal use only"])
+
+    def test_code_that_speaks(self):
+        with TempFiles() as t:
+            f = t.lint("a.py", "# The API tells the caller that the file is missing. The parser said no.\n")
+        self.assertEqual(sorted(texts(f, "speaks?")), ["'said': only a person is the actor", "'tells': only a person is the actor"])
+        self.assertEqual(texts(f, "figurative?"), [])
 
     def test_long_sentence_and_max_words(self):
         sentence = "# " + " ".join(["word"] * 22) + ".\n"

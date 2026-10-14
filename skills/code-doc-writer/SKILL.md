@@ -39,12 +39,12 @@ Files in the skill directory:
 | File | Holds |
 |---|---|
 | `references/ste-rules.md` | The ASD-STE100 rules in short form, and how each applies to docs, messages, and comments. |
-| `references/words.md` | The word swaps, the filler to delete, and the words that are often figurative. The lint reads its lists from this file. |
+| `references/words.md` | The word swaps, the filler to delete, the words that are often figurative, and the speech verbs that need a person as the actor. The lint reads its lists from this file. |
 | `references/document-shape.md` | The shape of a documentation page, a changelog entry, a pull request description, and an issue description. |
 | `references/comments-in-code.md` | The shape of a doc comment and an inline comment, and the order of the tags. |
 | `references/messages.md` | The three parts of a message, the rules for messages and log lines, and one example. |
 | `references/examples.md` | Before and after pairs for every kind of text. |
-| `references/lint.md` | What the lint finds, what it can't see, how to run it, and what it reads in each kind of file. |
+| `references/lint.md` | What the lint finds, what it doesn't check, how to run it, and what it reads in each kind of file. |
 | `scripts/doc_lint.py` | The lint. |
 
 ## Scope
@@ -86,9 +86,9 @@ Every text has one of two readers. Decide which one before you write.
 | Reader | A user of the product or library. Knows the domain, but doesn't read the source. | A developer of this codebase. Knows the domain, the modules, and the code. |
 | Default | A doc exists. Fill it. | No doc exists. Write one only when the keep test keeps at least one sentence. |
 | Has | One place at a time: the website, the README, the doc comment in the IDE, or one overload of a function. | The source and the user docs. |
-| Tell | What it does. When to use it. How to use it. What the reader must know first. | Only what the code can't show. |
+| Holds | What it does. When to use it. How to use it. What the reader must know first. | Only what the code can't show. |
 | Repeat | Every fact the reader needs in this place, even when another page, the README, or another overload also states it. | A fact from the user docs only to add to it. |
-| Never | Implementation, internal types, other modules, build tooling, history, design arguments. | What the code already shows. What the user docs already say. History. |
+| Never | Implementation, internal types, other modules, build tooling, history, design arguments. | What the code already shows. What the user docs already state. History. |
 
 Which reader a text has:
 
@@ -139,7 +139,7 @@ rules each remove one of them:
 4. Apply the keep test to each sentence. Delete or keep.
 5. Write each kept sentence with the language rules.
 6. Give the kept sentences their form: a list or a table when
-   [Form](#language-rules) says so, in the order that the shape of the
+   [Form](#language-rules) requires one, in the order that the shape of the
    text gives. `references/document-shape.md`,
    `references/comments-in-code.md`, and `references/messages.md` give
    the shapes.
@@ -149,7 +149,7 @@ rules each remove one of them:
    wording.
 8. Run `scripts/doc_lint.py` on the file. Fix every hard failure. Read
    each soft warning and fix it or leave it with a reason.
-   `references/lint.md` tells what the lint finds and what it can't see.
+   `references/lint.md` lists what the lint finds and what it doesn't check.
 9. In a rewrite, compare the result with the original. The result has
    every kept fact and invents none. A qualifier such as "some", "only",
    or "when X" is a fact.
@@ -174,16 +174,16 @@ Two rules on style:
 
 Delete a sentence when one of these is true:
 
-- The context already says it: the name, the type, the signature, the
+- The context already gives it: the name, the type, the signature, the
   modifier, the heading, the previous sentence, or the example. One
   exception: user docs state the default value.
-- In private docs: another text that the reader has already says it. Keep
+- In private docs: another text that the reader has already gives it. Keep
   the fact in one place. Link to that place.
 - It explains a reason to a reader who already knows the domain.
 - It teaches the host language, tool, or platform instead of this
   product. How to declare a dependency, what `this` is in a block, how
   a language feature works, how a version control system works.
-- It tells history, intent, or feelings and nothing else. "Previously",
+- It gives history, intent, or feelings and nothing else. "Previously",
   "used to", and "now" belong to version control. Delete the intent word
   first ("deliberately", "on purpose", "honest", "intended", "we chose").
   Then apply the keep test to the fact that remains.
@@ -197,14 +197,14 @@ Keep a sentence when one of these is true:
 - A reader can do the wrong thing without it. Such a fact is a
   precondition, a side effect, thread safety, ownership, an order of steps
   or calls, a limit, or a unit.
-- It tells a user when to use the element. When the original gives no
+- It states when a user must use the element. When the original gives no
   real condition, take one from the project's docs or keep the original.
   Never infer a condition from the rationale.
 - It gives a constraint from outside: a tool bug, a protocol, a version
   limit, a file format. Give the source of the constraint. A workaround
   has to have a bug link. When the text has none, add it.
 - It gives the one invariant that the code relies on and doesn't check.
-- It tells why the code or the procedure doesn't do the obvious thing.
+- It gives the reason that the code or the procedure doesn't do the obvious thing.
 
 After the test:
 
@@ -217,7 +217,7 @@ After the test:
   group, not on each member.
 - When the test deletes every sentence, delete the whole text.
 - When the project requires a doc comment on every public declaration,
-  keep one sentence. It says what the declaration is for, not its name
+  keep one sentence. It states what the declaration is for, not its name
   again.
 
 ## Language rules
@@ -264,8 +264,8 @@ Sentences:
 - Active voice. Name the actor: the function, the caller, the compiler, the
   task, the user. Use the passive only when the actor is unknown.
 - Present tense for behavior. "Returns the size", not "will return".
-- A description describes. Use the imperative only in a sentence that
-  tells the reader what to do: "Call `close` after use."
+- A description describes. Use the imperative only in an instruction to
+  the reader: "Call `close` after use."
 - Condition or reason first, then the instruction. "If the file is missing,
   the task fails." "The getter is deprecated, so read it with reflection."
   One exception: a warning about a harmful action starts with the command,
@@ -291,10 +291,18 @@ Words:
   plain verb that is less exact.
 - No idioms, metaphors, or personification. Each word has its literal
   meaning only. "A bakes its logic into B" is wrong. "The oven bakes the bread"
-  is literal. Say the plain fact: "A stores the value at construction."
+  is literal. Write the plain fact: "A stores the value at construction."
   `references/words.md` lists the words that are often figurative. A word
   that looks figurative but has a technical meaning in the domain stays:
   catch an exception, pin a version.
+- Code doesn't speak or think. A function, an API, a type, a message, a
+  comment, or a document never tells, says, asks, wants, knows, thinks,
+  promises, or complains. Write what it does: returns, throws, reports,
+  shows, gives, states, lists, requires. "`open` throws
+  `FileNotFoundException` when the file is missing", not "the API tells
+  the caller that the file is missing". "The signature gives the type",
+  not "the signature says the type". `references/words.md` has the
+  list and the table.
 - "Keep" means "don't remove". It doesn't state a requirement or a state.
   "A workaround has to have a bug link", not "a workaround keeps its bug
   link". "The list has one entry", not "the list keeps one entry".
@@ -357,7 +365,7 @@ comments, inline comments, docstrings, messages, and log lines.
 - Every sentence passed the keep test and the reader test (step 10).
 - No user doc names a private type, a module, a build tool, or an
   internal mechanism.
-- User docs state defaults and tell when to use the element.
+- User docs state defaults and state when to use the element.
 - Each term has one name in the file.
 - No fact appears twice in the file.
 - No idiom, no filler, no Latin abbreviation, no semicolon, no dash aside.

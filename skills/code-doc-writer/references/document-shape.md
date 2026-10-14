@@ -4,7 +4,7 @@
 - One topic in each section. The headings alone give the outline.
 - The common case comes before the exceptions. A rule comes before the
   example that shows it.
-- A changelog entry says what changed for the reader, not what changed in
+- A changelog entry states what changed for the reader, not what changed in
   the code.
 
 # Shape of a pull request description
@@ -12,11 +12,11 @@
 The reader is a reviewer. They have the diff, the commit list, and the
 linked issue. The description holds what the diff can't show.
 
-- The title is one sentence that says what changed for the user or the
+- The title is one sentence that states what changed for the user or the
   developer, not which files changed. "Retry a failed upload three
   times", not "Update UploadService".
-- The body has these parts, in this order. Omit a part that has nothing
-  to say.
+- The body has these parts, in this order. Omit a part that has no
+  facts.
   1. The reason for the change, when the linked issue doesn't give it.
      In a pull request the reason is a fact the reviewer needs, so the
      keep test keeps it.

@@ -1,7 +1,7 @@
 # STE rules for technical docs
 
 ASD-STE100 Issue 9 (2025) has 9 sections of writing rules and a dictionary.
-This file gives each rule in short form and says how it applies to
+This file gives each rule in short form and shows how it applies to
 documentation, messages, and code comments. Read it when a rule in
 SKILL.md needs its source.
 
@@ -84,8 +84,8 @@ SKILL.md needs its source.
 ## Section 5: Procedural writing
 
 Instructions. In technical docs: a step in a procedure, a fix in a
-message, and a "how to use" sentence. Also `@param` text that tells the
-caller what to do.
+message, and a "how to use" sentence. Also `@param` text that gives the
+caller an instruction.
 
 - 5.1 At most 20 words in a sentence.
 - 5.2 One instruction in a sentence, unless two actions happen together.

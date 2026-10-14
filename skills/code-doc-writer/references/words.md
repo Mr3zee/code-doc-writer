@@ -8,7 +8,8 @@ and technical verb categories (rules 1.5 and 1.12, category "computer
 processes").
 
 `scripts/doc_lint.py` in the skill directory reads its word lists from
-this file: the two swap tables, the delete list, and the figurative list.
+this file: the two swap tables, the delete list, the figurative list,
+and the speech list.
 A change here changes the lint. Keep the format of each list: one table
 row or one bullet, items separated by commas, a condition in parentheses
 after the item.
@@ -43,8 +44,8 @@ after the item.
 | help | facilitate, assist, aid |
 | have | comprise, consist of, contain (when it means have) |
 | be | constitute |
-| think, expect | assume, consider |
-| tell | inform, notify |
+| expect, need | assume, consider |
+| report, show | inform, notify, tell (code or a text as the actor) |
 
 Each word in the "Instead of" column has one exception: it stays when it
 is the exact term of the domain.
@@ -172,7 +173,7 @@ Filler adds no fact. Delete it and read the sentence again.
 
 These words are figurative in most technical docs. Literal use is fine: "the
 oven bakes the bread". The lint flags each form of the word (bakes, baked,
-baking) and asks.
+baking) as a soft warning.
 
 - bake, ship, live, land, travel, walk, sit, sit on top, bridge, bleed,
   leak, poison, pollute, hijack, steal, sweep, funnel, gate, guard, wire,
@@ -187,6 +188,27 @@ baking) and asks.
   hack, lightweight, stale, fresh, sibling, cousin
 - honor, honour, respect, aware, friendly, smart, dumb, naive, clever,
   promote, demote, pay, paid, afford, invite
+
+## Code doesn't speak or think
+
+Speech and thought verbs have a person as the actor. Code, an API, a
+type, a message, a comment, and a document don't speak or think. Write
+what the thing does: returns, throws, reports, shows, gives, states,
+lists, requires. The lint flags each form of these words as a soft
+warning:
+
+- tell, told, say, said, speak, spoke, talk, ask, complain, promise,
+  want, know, knew, think, thought, believe
+
+| OK | Not OK |
+|---|---|
+| `open` throws `FileNotFoundException` when the file is missing. | The API tells the caller that the file is missing. |
+| The signature gives the type. | The signature says the type. |
+| The function requires a sorted list. | The function wants a sorted list. |
+| The log line reports the retry count. | The log line tells you the retry count. |
+| The parser doesn't check the order. | The parser assumes the order. |
+| The README states the default. | The README says the default. |
+| Tell the user to run the task. | |
 
 ## Contractions
 

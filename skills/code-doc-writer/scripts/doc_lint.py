@@ -6,7 +6,8 @@ Usage:
 
 Hard failures (exit code 1): a semicolon, an em dash, an en dash, ` -- `,
 or a ` - ` aside. Soft warnings: a long sentence, a filler word, a word
-with a plainer swap, a Latin abbreviation, a figurative word, a likely
+with a plainer swap, a Latin abbreviation, a figurative word, a speech
+or thought verb, a likely
 passive, an "-ing" clause, and an uncontracted negative.
 
 A source file: the lint reads the /* */, //, and # comments and the
@@ -18,12 +19,13 @@ A .md, .markdown, or .mdx file: the lint reads each paragraph, heading,
 list item, table row, and front matter value as one block. It skips code
 blocks, HTML tags and comments, images, template calls, and link reference
 definitions. It reads the text of a link as prose and counts the link as
-one word. Every finding is a soft warning, because the lint can't tell
-prose from markup it doesn't know.
+one word. Every finding is a soft warning, because the lint can't
+separate prose from unknown markup.
 To lint one message or a string, put it in a temporary .md file.
 
 The word lists come from references/words.md next to the scripts
-directory: the two swap tables, the delete list, and the figurative list.
+directory: the two swap tables, the delete list, the figurative list,
+and the speech list.
 """
 import json
 import re
@@ -59,8 +61,8 @@ def split_items(cell):
 
 
 def load_words(path):
-    """Returns (swaps, figurative) from words.md. swaps maps a word to its hint."""
-    swaps, figurative = {}, []
+    """Returns (swaps, figurative, speech) from words.md. swaps maps a word to its hint."""
+    swaps, figurative, speech = {}, [], []
     section = ""
     bullets = []
 
@@ -71,6 +73,8 @@ def load_words(path):
                     swaps[word] = "delete"
             elif section.startswith("often figurative"):
                 figurative.extend(word for word, _ in split_items(text))
+            elif section.startswith("code doesn't speak"):
+                speech.extend(word for word, _ in split_items(text))
         bullets.clear()
 
     for ln in path.read_text(encoding="utf-8").splitlines():
@@ -94,7 +98,7 @@ def load_words(path):
         else:
             flush()
     flush()
-    return swaps, figurative
+    return swaps, figurative, speech
 
 
 def word_forms(phrase):
@@ -116,10 +120,12 @@ def word_forms(phrase):
 
 if not WORDS_FILE.is_file():
     sys.exit(f"doc_lint.py: {WORDS_FILE} is missing")
-SWAPS, FIGURATIVE = load_words(WORDS_FILE)
+SWAPS, FIGURATIVE, SPEECH = load_words(WORDS_FILE)
 SWAP_RE = {word: re.compile(r"(?<![\w-])(" + "|".join(re.escape(f.rstrip(".")) for f in sorted(word_forms(word), key=len, reverse=True)) + r")\.?(?![\w-])") for word in SWAPS}
 FIG_FORMS = sorted({f for w in FIGURATIVE for f in word_forms(w)}, key=len, reverse=True)
 FIG_RE = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in FIG_FORMS) + r")(?![\w-])", re.I)
+SPEECH_FORMS = sorted({f for w in SPEECH for f in word_forms(w)}, key=len, reverse=True)
+SPEECH_RE = re.compile(r"(?<![\w-])(" + "|".join(re.escape(w) for w in SPEECH_FORMS) + r")(?![\w-])", re.I)
 
 HARD_PATTERNS = [
     ("semicolon", re.compile(r";")),
@@ -482,6 +488,10 @@ def lint_file(path, max_words):
             ln = line + prose[:m.start()].count("\n")
             findings.append(dict(file=path, line=ln, rule="figurative?", hard=False,
                                  text=f"'{m.group(0)}': literal use only"))
+        for m in SPEECH_RE.finditer(prose):
+            ln = line + prose[:m.start()].count("\n")
+            findings.append(dict(file=path, line=ln, rule="speaks?", hard=False,
+                                 text=f"'{m.group(0)}': only a person is the actor"))
         for m in PASSIVE.finditer(prose):
             if m.group(2).lower() in STATE_WORDS:
                 continue
