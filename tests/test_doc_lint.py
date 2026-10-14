@@ -84,7 +84,7 @@ class WordTableTest(unittest.TestCase):
             self.assertIn(word, dl.FIGURATIVE)
 
     def test_speech_and_thought_verbs_are_in_words(self):
-        for word in ("tell", "told", "say", "said", "ask", "want", "know", "think", "complain", "promise"):
+        for word in ("tell", "told", "say", "said", "ask", "want", "know", "think", "complain", "promise", "participate"):
             self.assertIn(word, dl.SPEECH)
             self.assertNotIn(word, dl.FIGURATIVE)
         self.assertEqual(dl.SWAPS["tell"], "report, show (code or a text as the actor)")

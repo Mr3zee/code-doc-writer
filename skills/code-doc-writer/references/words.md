@@ -198,7 +198,7 @@ lists, requires. The lint flags each form of these words as a soft
 warning:
 
 - tell, told, say, said, speak, spoke, talk, ask, complain, promise,
-  want, know, knew, think, thought, believe
+  want, know, knew, think, thought, believe, participate
 
 | OK | Not OK |
 |---|---|
