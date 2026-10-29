@@ -1,21 +1,20 @@
 ---
 name: code-doc-writer
 description: >-
-  Write or rewrite every text a person reads in code or in documentation,
-  in short plain technical English based on ASD-STE100. Use lists and
-  tables where the facts have a structure. The texts are doc comments (KDoc, Javadoc, JSDoc, Doxygen, docstrings, XML docs,
-  rustdoc, Go doc comments), inline comments, TODO and FIXME notes,
-  user-facing messages (diagnostics, errors, exceptions, assertions,
-  warnings, deprecation notices, log lines, CLI output, help text,
-  message templates), pull request titles and descriptions, issue
-  titles and descriptions (bug reports, feature requests), and
-  documentation in any format (README files, changelogs, docs websites,
-  guides, Markdown, reStructuredText, AsciiDoc). Use it every time you write, change, or delete such a text,
-  in any language, during any task. A one-line comment that is a side
-  effect of a code change counts. Also use it when someone asks to
-  simplify, shorten, clean up, review, or remove the noise or the
-  bullshit from docs, comments, or messages. Use it when someone asks for
-  STE, Simplified Technical English, or more readable English or language.
+  Write or rewrite every text a person reads in code or documentation,
+  in short plain technical English based on ASD-STE100, with lists and
+  tables where the facts have a structure. Covers doc comments (KDoc,
+  Javadoc, JSDoc, Doxygen, docstrings, XML docs, rustdoc, Go), inline
+  comments, TODO and FIXME notes, user-facing messages (diagnostics,
+  errors, exceptions, assertions, warnings, deprecation notices, log
+  lines, CLI output, help text, message templates), PR and issue titles
+  and descriptions, and docs in any format (README, changelogs, docs
+  sites, guides, Markdown, reStructuredText, AsciiDoc). Use it whenever
+  you write, change, or delete such a text, in any language or task, even
+  a one-line comment that is a side effect of a code change. Also use it
+  when someone asks to simplify, shorten, clean up, review, or remove
+  noise or bullshit from docs, comments, or messages, or asks for STE,
+  Simplified Technical English, or more readable English.
 ---
 
 # Code doc writer
@@ -316,6 +315,9 @@ Words:
 - American spelling.
 - Use the common negative contractions: can't, don't, doesn't, isn't,
   won't, didn't, aren't, wasn't. Never "cannot".
+- Negate the verb, not the object. "The lint doesn't report anything",
+  not "the lint reports nothing". `references/words.md` has the reason,
+  the exception, and the table.
 - A link names what it points to, not the act of reading. Not "See the
   documentation". Write "[Request timeouts](url)". Use `@see` with a name
   when the doc tool renders one. When the tool renders no name, a bare URL

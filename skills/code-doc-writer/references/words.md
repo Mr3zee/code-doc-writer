@@ -210,11 +210,26 @@ warning:
 | The README states the default. | The README says the default. |
 | Tell the user to run the task. | |
 
-## Contractions
+## Negation
 
 Use the common negative contractions can't, don't, doesn't, isn't,
 won't, didn't, aren't, wasn't. Never "cannot". Write every other word in
 full: no it's, you're, or we've.
+
+Negate the verb, not the object. A negative object (nothing, nobody, no
+one, none, no + noun) puts the negation at the end of the sentence. The
+reader has already read the verb as a positive fact. Put the negation on
+the verb and change the object to "any", "anything", or "anyone". A
+negative subject stays, because the reader sees the negation first.
+
+| Write | Not |
+|---|---|
+| The lint doesn't report anything. | The lint reports nothing. |
+| The filter doesn't match any file. | The filter matches no file. |
+| The lock doesn't block anyone. | The lock blocks nobody. |
+| The parser doesn't accept any of these. | The parser accepts none of these. |
+| Nothing else runs. | |
+| No file matched. | |
 
 ## Modal verbs
 
