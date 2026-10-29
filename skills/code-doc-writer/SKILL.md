@@ -239,6 +239,11 @@ Form:
 - One item holds one fact, in a noun phrase or in one to three sentences.
   All items of a list have the same grammar: all noun phrases, all
   sentences, or all commands.
+- A noun phrase has no clause: no "whose", "which", or "that" with a verb
+  after it. "An exemption whose check reports nothing" is a sentence in
+  the shape of a noun phrase. Write the sentence, condition first: "When
+  the check reports nothing without the exemption, the exemption is
+  unused."
 - Put the label first in an item that has one: "`fast`: syntax checks
   only." Don't repeat the lead-in words in each item.
 - Nest a list one level at most. Put more structure in a table or a
@@ -271,6 +276,11 @@ Sentences:
   then the risk. "Don't call this from the UI thread. It blocks until the
   file is read."
 - Keep articles and the word "that". "Make sure that the list is sorted."
+- A pronoun points to a noun in the same clause or in the sentence before.
+  When the noun is further back, or another noun stands between, repeat
+  the noun. "The check reports nothing on the element without the
+  exemption", not "without it" when "it" has to reach past "the check"
+  and "the element".
 - No semicolons. No dashes for asides. Parentheses only for a reference,
   an identifier, an abbreviation, a short explanation, or an alternative
   (STE 8.3).

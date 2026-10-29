@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "code-doc-writer",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Write and rewrite doc comments, code comments, user-facing messages, pull request and issue descriptions, and documentation in short plain technical English based on ASD-STE100."
 }

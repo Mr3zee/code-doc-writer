@@ -8,7 +8,7 @@ Hard failures (exit code 1): a semicolon, an em dash, an en dash, ` -- `,
 or a ` - ` aside. Soft warnings: a long sentence, a filler word, a word
 with a plainer swap, a Latin abbreviation, a figurative word, a speech
 or thought verb, a likely
-passive, an "-ing" clause, and an uncontracted negative.
+passive, an "-ing" clause, a relative clause, and an uncontracted negative.
 
 A source file: the lint reads the /* */, //, and # comments and the
 triple-quoted strings. It doesn't read string literals. Any language
@@ -152,6 +152,8 @@ PASSIVE = re.compile(
     r"run|set|put|read|written|given|taken|seen|known|shown|found|thrown|caught|sent|left|lost|"
     r"hidden|chosen|driven|bound|cut|hit|split|spread)\b", re.I)
 ING_CLAUSE = re.compile(r"\b(when|while|by|before|after|without|upon|on|for|instead of)\s+\w+ing\b", re.I)
+# "whose" and ", which" open a clause inside a noun phrase. A bare "which" or "that" is often a plain pronoun.
+RELATIVE_CLAUSE = re.compile(r"\bwhose\b|,\s*which\b", re.I)
 
 CODE_SPAN = re.compile(r"`[^`]*`|<(code|kbd|samp|var|tt)>.*?</\1>|\[[^\]]*\]\([^)]*\)|\[[^\]]*\]|\{@\w+[^}]*\}|<[^>]+>", re.S)
 SENT_SPLIT = re.compile(r"(?<=[.!?:])\s+(?=[A-Z0-9`\[(\"'\x02])")
@@ -500,6 +502,10 @@ def lint_file(path, max_words):
         for m in ING_CLAUSE.finditer(prose):
             ln = line + prose[:m.start()].count("\n")
             findings.append(dict(file=path, line=ln, rule="ing-clause", hard=False, text=m.group(0)))
+        for m in RELATIVE_CLAUSE.finditer(prose):
+            ln = line + prose[:m.start()].count("\n")
+            findings.append(dict(file=path, line=ln, rule="clause?", hard=False,
+                                 text=f"'{m.group(0).strip()}': a clause in a noun phrase, write a sentence"))
     return findings
 
 

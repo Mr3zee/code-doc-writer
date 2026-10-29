@@ -1,8 +1,8 @@
 # Lint
 
 The lint finds punctuation, the words in `words.md`, a
-sentence over the limit, a likely passive, an "-ing" clause, and an
-uncontracted negative. Nothing else.
+sentence over the limit, a likely passive, an "-ing" clause, a relative
+clause, and an uncontracted negative. Nothing else.
 
 What the lint doesn't check:
 
@@ -28,11 +28,17 @@ python3 scripts/doc_lint.py [--json] [--max-words N] FILE...
 | Hard failure | 1 | A semicolon, an em dash, an en dash, a double hyphen, or a hyphen with a space on each side. |
 | Soft warning | 0 | Every other finding. A question, not an order. |
 
-Two soft warnings are questions about the use, not the word.
+Three soft warnings are questions about the use, not the word.
 `figurative?` marks a word that often has a figurative meaning. `speaks?`
 marks a speech or thought verb. The verb passes when a person is the
 actor: "Tell the user to run the task". It fails when code or a text is
-the actor: "The API tells the caller".
+the actor: "The API tells the caller". `clause?` marks "whose" and
+", which", the words that open a clause inside a noun phrase. The clause
+passes in a sentence: "The task, which runs last, writes the report" is
+one sentence with an aside. It fails in a list item or a one-line doc
+that is a noun phrase: "An option whose default is off" is a sentence in
+the shape of a noun phrase. The lint doesn't mark "that" or a bare
+"which". Both are often plain pronouns.
 
 What the lint reads in each kind of file:
 

@@ -38,6 +38,6 @@ gallery, and users run `pi install npm:code-doc-writer`.
 
 ### Junie
 
-Junie has no marketplace yet. The install script is in `docs/`, which
-GitHub Pages serves at `https://mr3zee.github.io/code-doc-writer/`. A push
-to `master` deploys the page.
+Junie has no marketplace yet. The install script is in `docs/`. GitHub
+Pages serves that directory at `https://mr3zee.github.io/code-doc-writer/`.
+A push to `master` deploys the page.

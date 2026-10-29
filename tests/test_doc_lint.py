@@ -455,6 +455,14 @@ class RulesTest(unittest.TestCase):
             f = t.lint("a.py", "# The change shipped. It bakes the value in. Websites.\n")
         self.assertEqual(sorted(texts(f, "figurative?")), ["'bakes': literal use only", "'shipped': literal use only"])
 
+    def test_relative_clause(self):
+        with TempFiles() as t:
+            f = t.lint("a.py", "# An exemption whose check reports nothing. The task, which runs last, writes. The file that the task writes.\n")
+        self.assertEqual(sorted(texts(f, "clause?")), [
+            "', which': a clause in a noun phrase, write a sentence",
+            "'whose': a clause in a noun phrase, write a sentence",
+        ])
+
     def test_code_that_speaks(self):
         with TempFiles() as t:
             f = t.lint("a.py", "# The API tells the caller that the file is missing. The parser said no.\n")

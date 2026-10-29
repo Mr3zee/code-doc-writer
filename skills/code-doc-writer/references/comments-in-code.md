@@ -23,8 +23,9 @@ declarations have user docs.
     argument or configuration error that stops the program gets no tag.
 - Most doc comments fit in one to three sentences.
 - A one-line doc on a member of a group can be a noun phrase: "The timeout
-  of `read`." A noun phrase has no verb, so the sentence rules don't apply
-  to it.
+  of `read`." A noun phrase has no verb and no clause, so the sentence
+  rules don't apply to it. A phrase with a clause ("The timeout that the
+  caller sets") is a sentence and follows the sentence rules.
 - An inline comment describes. "The pair maps to one `\n`, so an
   insertion can't split it." Not "Map the pair to one `\n`". Use the
   imperative only for an instruction to the next editor, with the reason
